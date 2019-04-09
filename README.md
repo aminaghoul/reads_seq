@@ -1,2 +1,2 @@
 # reads_seq
-study the distribution of lenght and number of read from 3rd generation sequencage.
+study the distribution of length and number of read from 3rd generation sequencage.
