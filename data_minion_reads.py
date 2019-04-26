@@ -36,10 +36,10 @@ Fichiers = [monFichier18]
 id = []
 nbr = []
 tab = []
-
+"""
 def b(x,g,n):
     return (1/g)*n*(1-x)**(n-1)
-
+"""
 
 
 
@@ -90,7 +90,7 @@ err3=open("../Documents/MINION_FASTQ/ERR1111171_1.fastq", "r")
 err4=open("../Documents/MINION_FASTQ/ERR1111171_2.fastq", "r")
 
 err=[err1, err2, err3, err4]
-
+"""
 
 fich1=open("../Documents/MINION_FASTQ/DRR129261.fastq", "r")
 fich2=open("../Documents/MINION_FASTQ/DRR129651.fastq", "r")
@@ -117,7 +117,7 @@ fich21=open("../Documents/MINION_FASTQ/DRR164915.fastq", "r")
 drr = [fich1, fich2, fich3, fich4, fich5, fich6, fich7, fich8, fich9, fich10, fich11, fich12, fich13, fich14, fich15,
        fich16, fich17, fich18, fich19, fich20, fich21]
 
-"""
+
 def afficher_hist(drr):
     #x = np.linspace(0, 1)
     taille = []
@@ -136,50 +136,45 @@ def afficher_hist(drr):
         ax.hist(taille, range=(0, 10000))
         #plt.savefig('TailleReadsMinionDRR.png')
         plt.show()
-        x=np.linspace(0, 1)
+        x = np.linspace(0, 1)
         #x = np.linspace(beta.ppf(0.01, 1, len(taille)), beta.ppf(0.99, 1, len(taille)), 100000)
         #plt.plot(x, b(x, sum(taille), len(taille)))
         #plt.show()
-        #print(stats.kstest(taille, 'beta', args=(1, len(taille))))
-        print(taille)
-        print(len(taille))
         #N = np.random.uniform(0, sum(taille) / 1000, 1000)
         #t = sum(taille) / N
         #plt.hist(t, range=(0, 10000))
         #plt.xlabel('taille de N fragment où N suit loi unif')
         #plt.title('DIstribution de la taille de N fragment')
         #plt.savefig('tailleNfragment.png')
-        #beta.fit(taille, 1, len(taille), scale=10000)
 
-        size = max(taille)
-        x = np.linspace(0, max(taille), len(taille))
-        # creating the dummy sample (using beta distribution)
-
-        # creating the histogram
-        h = plt.hist(taille, range=(0, 10000))
-
-
+        norm = []
+        m = max(taille)
+        s = sum(taille)
+        n = len(taille)
+        for i in taille:
+            norm.append(i/m)
+        plt.hist(norm, bins=np.arange(min(norm), max(norm) + 0.2, 0.2), rwidth=0.5)
+        x = np.arange(min(norm), max(norm)+0.2, 0.2)
+        plt.plot(x, s*1000*b(x, sum(taille), len(taille)))
+        print(sum(norm))
+        plt.show()
+        h = plt.hist(norm, range=(0, 1))
         dist = getattr(scipy.stats, 'beta')
-        param = dist.fit(taille)
-        pdf_fitted = dist.pdf(x, 1, len(taille), loc=0, scale=1) * max(taille)
+        param = dist.fit(norm)
+        print(param)
+        x = scipy.arange(100)
+        pdf_fitted = dist.pdf(x, 1, len(norm), loc=param[-2], scale=param[-1])*100
         plt.plot(pdf_fitted, label='beta')
-        plt.xlim(0, 10000)
+        plt.xlim(0, 1)
         plt.show()
-
-
-
-
-
-        plt.show()
-
-
+        print(stats.kstest(norm, 'beta', args=(1, len(norm))))
 
         #nbr.append(len(taille))
         f = []
         taille = []
 
 
-
+"""
 pacbio1=open("../Documents/PACBIO/DRR008620_subreads.fastq", "r")
 pacbio2=open("../Documents/PACBIO/DRR013332_subreads.fastq", "r")
 pacbio3=open("../Documents/PACBIO/DRR013333_subreads.fastq", "r")
@@ -220,9 +215,9 @@ pacbio = [pacbio1, pacbio2, pacbio3, pacbio4, pacbio5, pacbio6, pacbio7, pacbio8
 #afficher_hist(drr)
 
 
-afficher_hist(pacbio)
 
-"""
+
+
 print(nbr)
 plt.hist(nbr)
 plt.xlabel('nombres de fragment')
@@ -232,3 +227,5 @@ plt.show()
 
 afficher_hist(err)
 """
+
+afficher_hist(drr)
