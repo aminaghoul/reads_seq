@@ -1,3 +1,5 @@
+import os
+
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
@@ -14,8 +16,7 @@ import sys
 importer les fichiers et les mettre dans un tableau
 """
 
-
-monFichier = open("../Documents/MINION_FASTQ/SRR6472704.fastq", "r")
+'''monFichier = open("../Documents/MINION_FASTQ/SRR6472704.fastq", "r")
 monFichier1 = open("../Documents/MINION_FASTQ/SRR7548026.fastq", "r")
 monFichier2 = open("../Documents/MINION_FASTQ/SRR7989207.fastq", "r")
 monFichier3 = open("../Documents/MINION_FASTQ/SRR8335319.fastq", "r")
@@ -92,19 +93,23 @@ pacbio27 = open("../Documents/PACBIO/ERR070565_1.fastq", "r")
 pacbio28 = open("../Documents/PACBIO/ERR070566_1.fastq", "r")
 pacbio29 = open("../Documents/PACBIO/ERR070567_1.fastq", "r")
 
+pacbio = [
+	pacbio1, pacbio2, pacbio3, pacbio4, pacbio5, pacbio6, pacbio7, pacbio8, pacbio9, pacbio10, pacbio11, pacbio12,
+	pacbio13, pacbio14, pacbio15, pacbio16, pacbio17, pacbio18, pacbio19, pacbio20, pacbio21, pacbio22, pacbio23,
+	pacbio24, pacbio25, pacbio26, pacbio27, pacbio28, pacbio29]
 
-pacbio = [pacbio1, pacbio2, pacbio3, pacbio4, pacbio5, pacbio6, pacbio7, pacbio8, pacbio9, pacbio10, pacbio11, pacbio12,
-          pacbio13, pacbio14, pacbio15, pacbio16, pacbio17, pacbio18, pacbio19, pacbio20, pacbio21, pacbio22, pacbio23,
-          pacbio24, pacbio25, pacbio26, pacbio27, pacbio28, pacbio29]
-
-drr = [fich1, fich2, fich3, fich4, fich5, fich6, fich7, fich8, fich9, fich10, fich11, fich12, fich13, fich14, fich15,
-       fich16, fich17, fich18, fich19, fich20, fich21]
+drr = [
+	fich1, fich2, fich3, fich4, fich5, fich6, fich7, fich8, fich9, fich10, fich11, fich12, fich13, fich14, fich15,
+	fich16, fich17, fich18, fich19, fich20, fich21]
 
 err = [err1, err2, err3, err4]
 
-srr = [monFichier, monFichier1, monFichier2, monFichier3, monFichier4, monFichier5, monFichier6, monFichier7,
-       monFichier8, monFichier9, monFichier10, monFichier11, monFichier12, monFichier13, monFichier14,
-       monFichier15, monFichier16, monFichier17, monFichier18]
+srr = [
+	monFichier, monFichier1, monFichier2, monFichier3, monFichier4, monFichier5, monFichier6, monFichier7,
+	monFichier8, monFichier9, monFichier10, monFichier11, monFichier12, monFichier13, monFichier14,
+	monFichier15, monFichier16, monFichier17, monFichier18]
+'''
+pacbio = drr = err = srr = [open(i) for i in os.listdir('.') if i.endswith('.fastq')]
 
 
 def b(x, g, n):
@@ -115,7 +120,7 @@ def b(x, g, n):
     :param n: nombre de fragments
     :return: fonction loi beta
     """
-    return (1/g)*n*(1-x)**(n-1)
+    return (1 / g) * n * (1 - x) ** (n - 1)
 
 
 def afficherhistdrr(srr):
@@ -180,7 +185,7 @@ def afficherhistdrr(srr):
 
         print(stats.kstest(norm, 'beta', args=(1, len(norm))))
 
-        N = np.random.uniform(0, sum(taille)/1000, 1000)
+        N = np.random.uniform(0, sum(taille) / 1000, 1000)
         t = sum(taille) / N
         plt.hist(t, normed=True)
         plt.xlabel('taille de N fragment où N suit loi unif')
@@ -191,7 +196,7 @@ def afficherhistdrr(srr):
         taille = []
 
 
-def afficher_hist(drr):
+def afficher_hist__(drr):
     """
     affiche l'histogramme de la distribution des tailles de reads pour chaque fichier drr
     affiche l'histogramme normalisé avec la courbe b correspondante
@@ -211,7 +216,7 @@ def afficher_hist(drr):
 
         for i, element in enumerate(f):
             if element.endswith("/1") and i + 1 < len(f):
-                taille.append(len(f[i+1]))
+                taille.append(len(f[i + 1]))
 
         m = max(taille)
         s = sum(taille)
@@ -237,7 +242,7 @@ def afficher_hist(drr):
         dist = getattr(scipy.stats, 'beta')
         param = dist.fit(norm)
         x = scipy.arange(100)
-        pdf_fitted = dist.pdf(x, 1, len(norm), loc=param[-2], scale=param[-1])*100
+        pdf_fitted = dist.pdf(x, 1, len(norm), loc=param[-2], scale=param[-1]) * 100
         plt.plot(pdf_fitted, label='beta')
         plt.xlim(0, 1)
         plt.show()
@@ -255,12 +260,94 @@ def afficher_hist(drr):
         taille = []
 
 
-afficherhistdrr(srr)
-afficher_hist(drr)
-afficher_hist(err)
-afficher_hist(pacbio)
+def extract(nbr, fich):
+    """
 
-print(nbr)
-plt.hist(nbr, bins=np.arange(min(nbr), max(nbr) + 0.2, 0.2), normed=True, rwidth=0.5)
-plt.xlabel('nombres de fragment')
-plt.show()
+    :param fich: fichier MINION ou pacbio
+    :return tailles, m, s, n: Une liste de tailles de fragments, le max, la somme et le nombre de fragments
+    """
+    taille, f = [], []
+    for line in fich:
+        fields = line.strip().split()
+        for idx, word in enumerate(fields):
+            f.append(word)
+
+    for i, element in enumerate(f):
+        if element.endswith("/1") and i + 1 < len(f):
+            taille.append(len(f[i + 1]))
+    # IMPORTANT: il faut pouvoir avoir des x croissants
+    taille = list(sorted(taille))
+    m, s, n = max(taille), sum(taille), len(taille)
+    '''
+
+    for i in taille:
+        norm.append(i / m)
+
+    plt.hist(norm, bins=np.arange(min(norm), max(norm) + 0.2, 0.2), rwidth=0.5)
+    x = np.arange(min(norm), max(norm) + 0.2, 0.2)
+    plt.plot(x, s * 1000 * b(x, s, n))
+    plt.title('Distribution beta 1/g*(n)*(1-x)^(n-1) g : taille génome, n=nombre de fragments')
+    plt.show()
+
+    h = plt.hist(norm, bins=np.arange(min(norm), max(norm) + 0.2, 0.2), rwidth=0.5)
+    dist = getattr(scipy.stats, 'beta')
+    param = dist.fit(norm)
+    x = scipy.arange(100)
+    pdf_fitted = dist.pdf(x, 1, len(norm), loc=param[-2], scale=param[-1]) * 100
+    plt.plot(pdf_fitted, label='beta')
+    plt.xlim(0, 1)
+    plt.show()
+
+    print(stats.kstest(norm, 'beta', args=(1, len(norm))))
+
+    N = np.random.uniform(0, sum(taille) / 1000, 1000)
+    t = sum(taille) / N
+    plt.hist(t, bins=np.arange(min(t), max(t) + 0.2, 0.2), normed=True, rwidth=0.5)
+    plt.xlabel('taille de N fragment où N suit loi unif')
+    plt.title('DIstribution de la taille de N fragment')
+    plt.show()'''
+    return taille, m, s, n
+
+
+def afficher_hist(nbr, drr, normalise=True, inclure_theorique=True):
+    """
+    affiche l'histogramme de la distribution des tailles de reads pour chaque fichier drr
+    affiche l'histogramme normalisé avec la courbe b correspondante
+    affiche l'histogramme des tailles de reads avec N : le nombre de fragments suivant une loi connue (uniforme)
+    :param drr: liste de plusieurs fichiers MINION ou pacbio
+    :param nbr: liste du nombre de fragments pour chaque génome
+    :return: nbr: liste du nombre de fragments pour chaque génome complétée
+    """
+    fig, plots = plt.subplots(1, len(drr))
+    for plot, fich in zip(plots, drr):
+        t, m, s, n = extract(nbr, fich)
+
+        norm = [i / s for i in t]
+        if inclure_theorique:
+            dx = 0.5
+            plot.plot(norm if normalise else t, [b(x, s, n) * s * dx for x in norm])
+
+        if not normalise:
+            plot.hist(t)  # , bins=np.arange(min(taille), m + 0.2, 0.2), rwidth=0.5)
+            plot.set_xlabel('taille en bp')
+            plot.set_title('Distribution de %r' % fich.name)
+        else:
+            plot.hist(norm)  # , bins=np.arange(min(taille), m + 0.2, 0.2), rwidth=0.5)
+            plot.set_xlabel('taille normalisée en bp')
+            plot.set_title('Distribution normalisée de %r' % fich.name)
+
+
+if __name__ == '__main__':
+    nbr = []
+    # afficherhistdrr(srr)
+    afficher_hist(nbr, drr)
+    # plt.show()
+    # afficher_hist(err)
+    plt.show()
+    exit()
+    afficher_hist__(pacbio)
+
+    print(nbr)
+    plt.hist(nbr, bins=np.arange(min(nbr), max(nbr) + 0.2, 0.2), normed=True, rwidth=0.5)
+    plt.xlabel('nombres de fragment')
+    plt.show()
