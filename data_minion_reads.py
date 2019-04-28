@@ -1,3 +1,4 @@
+import json
 import os
 
 import matplotlib
@@ -109,7 +110,6 @@ srr = [
 	monFichier8, monFichier9, monFichier10, monFichier11, monFichier12, monFichier13, monFichier14,
 	monFichier15, monFichier16, monFichier17, monFichier18]
 '''
-pacbio = drr = err = srr = [open(i) for i in os.listdir('.') if i.endswith('.fastq')]
 
 
 def b(x, g, n):
@@ -196,120 +196,51 @@ def afficherhistdrr(srr):
         taille = []
 
 
-def afficher_hist__(drr):
-    """
-    affiche l'histogramme de la distribution des tailles de reads pour chaque fichier drr
-    affiche l'histogramme normalisé avec la courbe b correspondante
-    affiche l'histogramme des tailles de reads avec N : le nombre de fragments suivant une loi connue (uniforme)
-    :param drr: liste de plusieurs fichiers MINION ou pacbio
-    :param nbr: liste du nombre de fragments pour chaque génome
-    :return: nbr: liste du nombre de fragments pour chaque génome complétée
-    """
-    taille = []
-    f = []
-    norm = []
-    for fich in drr:
-        for line in fich:
-            fields = line.strip().split()
-            for idx, word in enumerate(fields):
-                f.append(word)
-
-        for i, element in enumerate(f):
-            if element.endswith("/1") and i + 1 < len(f):
-                taille.append(len(f[i + 1]))
-
-        m = max(taille)
-        s = sum(taille)
-        n = len(taille)
-
-        nbr.append(n)
-
-        plt.hist(taille, bins=np.arange(min(taille), m + 0.2, 0.2), normed=True, rwidth=0.5)
-        plt.xlabel('taille en bp')
-        plt.title('Distribution de la taille des reads')
-        plt.show()
-
-        for i in taille:
-            norm.append(i / m)
-
-        plt.hist(norm, bins=np.arange(min(norm), max(norm) + 0.2, 0.2), normed=True, rwidth=0.5)
-        x = np.arange(min(norm), max(norm) + 0.2, 0.2)
-        plt.plot(x, s * 1000 * b(x, s, n))
-        plt.title('Distribution beta 1/g*(n)*(1-x)^(n-1) g : taille génome, n=nombre de fragments')
-        plt.show()
-
-        h = plt.hist(norm, bins=np.arange(min(norm), max(norm) + 0.2, 0.2), normed=True, rwidth=0.5)
-        dist = getattr(scipy.stats, 'beta')
-        param = dist.fit(norm)
-        x = scipy.arange(100)
-        pdf_fitted = dist.pdf(x, 1, len(norm), loc=param[-2], scale=param[-1]) * 100
-        plt.plot(pdf_fitted, label='beta')
-        plt.xlim(0, 1)
-        plt.show()
-
-        print(stats.kstest(norm, 'beta', args=(1, len(norm))))
-
-        N = np.random.uniform(0, sum(taille) / 1000, 1000)
-        t = sum(taille) / N
-        plt.hist(t, bins=np.arange(min(t), max(t) + 0.2, 0.2), normed=True, rwidth=0.5)
-        plt.xlabel('taille de N fragment où N suit loi unif')
-        plt.title('DIstribution de la taille de N fragment')
-        plt.show()
-
-        f = []
-        taille = []
-
-
-def extract(nbr, fich):
+def extract(nbr, path):
     """
 
     :param fich: fichier MINION ou pacbio
     :return tailles, m, s, n: Une liste de tailles de fragments, le max, la somme et le nombre de fragments
     """
-    taille, f = [], []
-    for line in fich:
-        fields = line.strip().split()
+    try:
+        with open(path + '_length.json', 'rb') as f:
+            taille = json.load(f)
+    except FileNotFoundError:
+        taille, f, fich = [], [], open(path)
+
+        version = 'a'
+
+        if version == 'a':
+            for index, line in enumerate(fich):
+                print('Loading line %s' % index, end='\r')
+                for c in line.split():
+                    match = re.match(pattern='(A|T|C|G)+', string=c.strip())
+                    if match is not None:
+                        taille.append(len(match.group()))
+        else:
+            ligne, index = fich.readline(), 0
+            while ligne:
+                print('\rLoading line %s' % index, end='     ')
+                match = re.match(pattern=r'\s*(A|T|C|G)+\s*', string=ligne)
+                if match is not None:
+                    taille.append(len(match.group().strip()))
+                ligne, index = fich.readline(), index + 1
+
+        dumps = json.dumps(taille)
+        with open(path + '_length.json', 'w') as f:
+            f.write(dumps)
+    """    fields = line.strip().split()
         for idx, word in enumerate(fields):
             f.append(word)
 
     for i, element in enumerate(f):
         if element.endswith("/1") and i + 1 < len(f):
-            taille.append(len(f[i + 1]))
+            taille.append(len(f[i + 1]))"""
     # IMPORTANT: il faut pouvoir avoir des x croissants
-    taille = list(sorted(taille))
-    m, s, n = max(taille), sum(taille), len(taille)
-    '''
-
-    for i in taille:
-        norm.append(i / m)
-
-    plt.hist(norm, bins=np.arange(min(norm), max(norm) + 0.2, 0.2), rwidth=0.5)
-    x = np.arange(min(norm), max(norm) + 0.2, 0.2)
-    plt.plot(x, s * 1000 * b(x, s, n))
-    plt.title('Distribution beta 1/g*(n)*(1-x)^(n-1) g : taille génome, n=nombre de fragments')
-    plt.show()
-
-    h = plt.hist(norm, bins=np.arange(min(norm), max(norm) + 0.2, 0.2), rwidth=0.5)
-    dist = getattr(scipy.stats, 'beta')
-    param = dist.fit(norm)
-    x = scipy.arange(100)
-    pdf_fitted = dist.pdf(x, 1, len(norm), loc=param[-2], scale=param[-1]) * 100
-    plt.plot(pdf_fitted, label='beta')
-    plt.xlim(0, 1)
-    plt.show()
-
-    print(stats.kstest(norm, 'beta', args=(1, len(norm))))
-
-    N = np.random.uniform(0, sum(taille) / 1000, 1000)
-    t = sum(taille) / N
-    plt.hist(t, bins=np.arange(min(t), max(t) + 0.2, 0.2), normed=True, rwidth=0.5)
-    plt.xlabel('taille de N fragment où N suit loi unif')
-    plt.title('DIstribution de la taille de N fragment')
-    plt.show()'''
-    return taille, m, s, n
+    return list(sorted(taille)), max(taille), sum(taille), len(taille)
 
 
-def afficher_hist(nbr, drr, normalise=True, inclure_theorique=True):
+def afficher_hist(nbr, drr, normalise=False, inclure_theorique=True):
     """
     affiche l'histogramme de la distribution des tailles de reads pour chaque fichier drr
     affiche l'histogramme normalisé avec la courbe b correspondante
@@ -319,33 +250,34 @@ def afficher_hist(nbr, drr, normalise=True, inclure_theorique=True):
     :return: nbr: liste du nombre de fragments pour chaque génome complétée
     """
     fig, plots = plt.subplots(1, len(drr))
-    for plot, fich in zip(plots, drr):
-        t, m, s, n = extract(nbr, fich)
+    for plot, path in zip(plots, drr):
+        t, m, s, n = extract(nbr, path)
 
         norm = [i / s for i in t]
         if inclure_theorique:
-            dx = 0.5
-            plot.plot(norm if normalise else t, [b(x, s, n) * s * dx for x in norm])
+            plot.plot(norm if normalise else t, [b(x, s, n) * s for x in norm])
 
         if not normalise:
             plot.hist(t)  # , bins=np.arange(min(taille), m + 0.2, 0.2), rwidth=0.5)
             plot.set_xlabel('taille en bp')
-            plot.set_title('Distribution de %r' % fich.name)
+            plot.set_title('Distribution de %r' % path)
         else:
             plot.hist(norm)  # , bins=np.arange(min(taille), m + 0.2, 0.2), rwidth=0.5)
             plot.set_xlabel('taille normalisée en bp')
-            plot.set_title('Distribution normalisée de %r' % fich.name)
+            plot.set_title('Distribution normalisée de %r' % path)
+    plt.show()
 
+
+origine = '..'
+fichiers = pacbio = drr = err = srr = [os.path.abspath(i.path) for i in os.scandir(origine) if i.endswith('.fastq')]
 
 if __name__ == '__main__':
     nbr = []
     # afficherhistdrr(srr)
-    afficher_hist(nbr, drr)
+    afficher_hist(nbr, fichiers)
     # plt.show()
     # afficher_hist(err)
-    plt.show()
     exit()
-    afficher_hist__(pacbio)
 
     print(nbr)
     plt.hist(nbr, bins=np.arange(min(nbr), max(nbr) + 0.2, 0.2), normed=True, rwidth=0.5)
