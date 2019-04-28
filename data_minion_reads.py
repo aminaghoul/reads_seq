@@ -159,9 +159,8 @@ def main():
     # Afficher les tailles, sous forme d'un histogramme
     fig, plot = plt.subplots(1, 1)
     plot.hist(list(sorted(map(len, nombres_fragments))))  # , bins=np.arange(min(taille), m + 0.2, 0.2), rwidth=0.5)
-    plt.show()
     # Affiche les tableaux
-    # afficher_hist()
+    afficher_hist()
 
     return 0
 
