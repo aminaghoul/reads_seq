@@ -190,7 +190,7 @@ def afficherhistdrr(srr):
         id = []
         taille = []
 
-
+nbr = []
 def afficher_hist(drr):
     """
     affiche l'histogramme de la distribution des tailles de reads pour chaque fichier drr
@@ -200,6 +200,7 @@ def afficher_hist(drr):
     :param nbr: liste du nombre de fragments pour chaque génome
     :return: nbr: liste du nombre de fragments pour chaque génome complétée
     """
+    global nbr
     taille = []
     f = []
     norm = []
@@ -213,6 +214,7 @@ def afficher_hist(drr):
             if element.endswith("/1") and i + 1 < len(f):
                 taille.append(len(f[i+1]))
 
+          
         m = max(taille)
         s = sum(taille)
         n = len(taille)
