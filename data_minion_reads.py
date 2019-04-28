@@ -1,5 +1,6 @@
 import json
 import os
+import typing
 
 import matplotlib
 import matplotlib.pyplot as plt
@@ -196,51 +197,20 @@ def afficherhistdrr(srr):
         taille = []
 
 
-def extract(nbr, path):
-    """
+def square(length):
+    x, y = length, length
+    while x * y > length:
+        x -= 1
+        if x * y < length:
+            return x + 1, y
 
-    :param fich: fichier MINION ou pacbio
-    :return tailles, m, s, n: Une liste de tailles de fragments, le max, la somme et le nombre de fragments
-    """
-    try:
-        with open(path + '_length.json', 'rb') as f:
-            taille = json.load(f)
-    except FileNotFoundError:
-        taille, f, fich = [], [], open(path)
-
-        version = 'a'
-
-        if version == 'a':
-            for index, line in enumerate(fich):
-                print('Loading line %s' % index, end='\r')
-                for c in line.split():
-                    match = re.match(pattern='(A|T|C|G)+', string=c.strip())
-                    if match is not None:
-                        taille.append(len(match.group()))
-        else:
-            ligne, index = fich.readline(), 0
-            while ligne:
-                print('\rLoading line %s' % index, end='     ')
-                match = re.match(pattern=r'\s*(A|T|C|G)+\s*', string=ligne)
-                if match is not None:
-                    taille.append(len(match.group().strip()))
-                ligne, index = fich.readline(), index + 1
-
-        dumps = json.dumps(taille)
-        with open(path + '_length.json', 'w') as f:
-            f.write(dumps)
-    """    fields = line.strip().split()
-        for idx, word in enumerate(fields):
-            f.append(word)
-
-    for i, element in enumerate(f):
-        if element.endswith("/1") and i + 1 < len(f):
-            taille.append(len(f[i + 1]))"""
-    # IMPORTANT: il faut pouvoir avoir des x croissants
-    return list(sorted(taille)), max(taille), sum(taille), len(taille)
+        y -= 1
+        if x * y < length:
+            return x, y + 1
+    return x, y
 
 
-def afficher_hist(nbr, drr, normalise=False, inclure_theorique=True):
+def afficher_hist(drr, normalise=False, inclure_theorique=True):
     """
     affiche l'histogramme de la distribution des tailles de reads pour chaque fichier drr
     affiche l'histogramme normalisé avec la courbe b correspondante
@@ -249,9 +219,14 @@ def afficher_hist(nbr, drr, normalise=False, inclure_theorique=True):
     :param nbr: liste du nombre de fragments pour chaque génome
     :return: nbr: liste du nombre de fragments pour chaque génome complétée
     """
-    fig, plots = plt.subplots(1, len(drr))
-    for plot, path in zip(plots, drr):
-        t, m, s, n = extract(nbr, path)
+    sq = square(len(drr))
+    fig, _plots = plt.subplots(*sq)
+    plots = []
+    for x in _plots:
+        plots.extend(x)
+    tailles = [(extraire_fichier(path), path) for path in drr]
+    for plot, (i, path) in zip(plots, sorted(tailles, key=lambda x: x[0][-1])):
+        t, m, s, n = i
 
         norm = [i / s for i in t]
         if inclure_theorique:
@@ -268,18 +243,94 @@ def afficher_hist(nbr, drr, normalise=False, inclure_theorique=True):
     plt.show()
 
 
-origine = '..'
-fichiers = pacbio = drr = err = srr = [os.path.abspath(i.path) for i in os.scandir(origine) if i.endswith('.fastq')]
+def human(size: int) -> str:
+    suffixes, index = ['o', 'Ko', 'Mo', 'Go', 'To'], 0
+    while size > 1024 and index < len(suffixes):
+        index += 1
+        size /= 1024
+    return '%.2f%s' % (size, suffixes[index])
+
+
+def extraire_fichier(chemin: str) -> typing.Tuple[typing.List[int], int, int, int]:
+    """
+
+    :param chemin: fichier MINION ou pacbio
+    :return tailles, m, s, n: Une liste de tailles de fragments, le max, la somme et le nombre de fragments
+    """
+    try:
+        with open(chemin + '_length.json', 'rb') as f:
+            taille = json.load(f)
+    except FileNotFoundError:
+        print('Chargement du fichier %r...' % os.path.relpath(chemin), end='', flush=True)
+
+        if chemin.endswith('.fastq'):
+
+            taille, f, index = [], open(chemin), 0
+            taille_fichier = os.path.getsize(chemin)
+            _t, _taille = time.time(), 0
+
+            ligne, index = f.readline(), 0
+            while ligne:
+                index += len(ligne)
+                match = re.match(pattern=r'\s*(A|T|C|G)+\s*', string=ligne)
+                if match is not None:
+                    taille.append(len(match.group().strip()))
+                ligne, index = f.readline(), index + 1
+                if _t + 0.3 < time.time():
+                    txt = '%s/%s (%.2f%%)' % (human(index), human(taille_fichier), (100 * index / taille_fichier))
+                    padding = ' ' * max(0, _taille - len(txt)) + '\b' * max(0, _taille - len(txt))
+                    print('\b' * _taille + txt + padding, end='', flush=True)
+                    _taille = len(txt)
+                    _t = time.time()
+
+            dumps = json.dumps(taille)
+            with open(chemin + '_length.json', 'w') as f:
+                f.write(dumps)
+        else:
+            print('erreur')
+
+            raise NotImplementedError('Fichier %r non supporté' % chemin)
+        txt = '%s/%s (%.2f%%)' % (human(taille_fichier), human(taille_fichier), 100.00)
+        padding = ' ' * max(0, _taille - len(txt)) + '\b' * max(0, _taille - len(txt))
+        print('\b' * _taille + txt + padding, end='', flush=True)
+
+    # IMPORTANT: il faut pouvoir avoir des x croissants (pour comparer avec 𝜷)
+    return list(sorted(taille)), max(taille), sum(taille), len(taille)
+
+
+def extraire_fichiers(chemins: typing.List[str]) -> typing.List[typing.Tuple[typing.List[int], int, int, int]]:
+    return [extraire_fichier(chemin) for chemin in chemins]
+
+
+def extraire_tailles(chemins: typing.List[str]) -> typing.List[int]:
+    return [len(i[0]) for i in extraire_fichiers(chemins)]
+
+
+def main():
+    # Chemin du dossier contenant les fichiers à traiter
+    origine = os.path.abspath(os.path.join(__file__, '..', '..', 'Données'))
+
+    # Chemins des fichiers à traiter (pour l'instant uniquement les fichiers fastq sont supportés
+    fichiers = [os.path.abspath(i.path) for i in os.scandir(origine) if i.path.endswith('.fastq')]
+
+    # On ajoute les fichiers déjà extrait
+    suf = '_length.json'
+    fichiers.extend([os.path.abspath(i.path.replace(suf, '')) for i in os.scandir(origine) if i.path.endswith(suf)])
+    fichiers = sorted(set(fichiers))
+
+    # Extraire la liste des nombres de fragments
+    nombres_fragments = extraire_tailles(fichiers)
+    print(nombres_fragments)
+
+    # Afficher les tailles, sous forme d'un histogramme
+    fig, plot = plt.subplots(1, 1)
+    plot.hist(nombres_fragments)  # , bins=np.arange(min(taille), m + 0.2, 0.2), rwidth=0.5)
+
+    # Affiche les tableaux
+    afficher_hist(fichiers)
+
+    return 0
+
 
 if __name__ == '__main__':
-    nbr = []
-    # afficherhistdrr(srr)
-    afficher_hist(nbr, fichiers)
-    # plt.show()
-    # afficher_hist(err)
-    exit()
-
-    print(nbr)
-    plt.hist(nbr, bins=np.arange(min(nbr), max(nbr) + 0.2, 0.2), normed=True, rwidth=0.5)
-    plt.xlabel('nombres de fragment')
-    plt.show()
+    exit(main())
