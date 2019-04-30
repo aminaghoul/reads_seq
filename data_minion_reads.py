@@ -1,10 +1,14 @@
 import json
 import os
+import random
 import re
 import time
 import typing
 
 import matplotlib.pyplot as plt
+from numpy.matlib import randn
+from tensorflow.python.ops.distributions import normal
+import numpy as np
 
 """
 importer les fichiers et les mettre dans un tableau
@@ -165,5 +169,78 @@ def main():
     return 0
 
 
+def generer_genes(n=1000, g=1000000) -> typing.List[int]:
+    """
+    Génère une liste de `n` échantillons d'ADN de taille `g`
+    :param n: Le nombre d'échantillons
+    :param g: Taille des échantillons
+    :return: Liste de tailles de génomes (pour des raisons de performances)
+    """
+    return [g] * n
+
+
+# ''.join(random.sample('ATCG' * g, g))
+
+def fracture(echantillons, n=65952, sigma=100):
+    """
+    Fracture une liste d'échantillons en utilisant un nombre de fractures variables de loi n = Norm(N, sigma)
+    :param sigma:
+    :param n: Ecart-type
+    :param echantillons:
+    :return:
+    """
+    #
+    échantillons_fracturés = []
+
+    # randn nous donne la loi normale centrée, on la convertis donc avec cette ligne
+    n = n + np.random.randn(len(echantillons)) * sigma
+
+    # On prends chaque échantillon et lui associe un nombre de fractures, converti en int à la volée
+    for i, taille_échantillon in zip(map(int, n), echantillons):
+        if i > taille_échantillon:
+            raise ValueError(
+                '\n\n\n'
+                'ERREUR: Le nombre de fragments demandé est trop grand, il est impossible de continuer\n'
+                'Vous pouvez: \n'
+                '\t- Réduire le nombre de fragments demandé, en jouant sur N et sigma\n'
+                '\t- Augmenter la taille des échantillons à fracturer\n'
+            )
+        # Il y aura n - 1 fractures pour obtenir n elements
+        nombre_fractures = i - 1
+
+        # Une fracture sera placée avant l'index désigné, donc une fracture
+        #   localisée à l'index 1 donnera un morceau de 1 et un de taille - 1
+        fractures = set()
+        while len(fractures) < nombre_fractures:
+            fractures.update(np.random.randint(1, taille_échantillon - 1, nombre_fractures))
+        print(nombre_fractures)
+        if len(fractures) != nombre_fractures:
+            if len(fractures) < nombre_fractures:
+                raise RuntimeError('ERREUR: Une erreur s\'est produite: pas assez de fragments')
+            fractures = set(list(fractures)[:nombre_fractures])
+        fractures = [0] + list(sorted(fractures)) + [taille_échantillon]
+        échantillon_fracturé = [
+            fractures[i + 1] - fractures[i] for i in range(nombre_fractures + 1)
+        ]
+        if sum(échantillon_fracturé) != taille_échantillon:
+            raise RuntimeError(
+                "ERREUR: Une erreur s'est produite lors de la fragmentation, \n"
+                f"Nous avons {abs(sum(échantillon_fracturé) - taille_échantillon)}"
+                f" fragments de différence entre ce qu'on attendais et ce qu'on a"
+            )
+
+        échantillons_fracturés.append(échantillon_fracturé)
+
+    return échantillons_fracturés
+
+
 if __name__ == '__main__':
+    # ech = fracture(generer_genes(10, 1000000), 65952, 1)[0]
+    fig, plot = plt.subplots(1, 1)
+    for ech in fracture(generer_genes(1000, 1000000), 65952, 10000):
+        plot.hist(ech) # , bins=np.arange(min(taille), m + 0.2, 0.2), rwidth=0.5)
+    # plot.hist(generer_genes(1000, 1000)) # , bins=np.arange(min(taille), m + 0.2, 0.2), rwidth=0.5)
+    # plot.hist(generer_genes(1000, 50)) # , bins=np.arange(min(taille), m + 0.2, 0.2), rwidth=0.5)
+    # Affiche les tableaux
+    exit(plt.show())
     exit(main())
