@@ -228,7 +228,7 @@ def fracture(echantillons, n=65952, sigma=100):
                 f"Nous avons {abs(sum(échantillon_fracturé) - taille_échantillon)}"
                 f" fragments de différence entre ce qu'on attendais et ce qu'on a"
             )
-
+        échantillon_fracturé = list(i for i in sorted(échantillon_fracturé) if i < 100)
         échantillons_fracturés.append(échantillon_fracturé)
 
     return échantillons_fracturés
@@ -237,8 +237,8 @@ def fracture(echantillons, n=65952, sigma=100):
 if __name__ == '__main__':
     # ech = fracture(generer_genes(10, 1000000), 65952, 1)[0]
     fig, plot = plt.subplots(1, 1)
-    for ech in fracture(generer_genes(1000, 1000000), 65952, 10000):
-        plot.hist(ech) # , bins=np.arange(min(taille), m + 0.2, 0.2), rwidth=0.5)
+    for ech in fracture(generer_genes(1, 1000000), 65952, 10000):
+        plot.hist(ech)  # , bins=np.arange(min(taille), m + 0.2, 0.2), rwidth=0.5)
     # plot.hist(generer_genes(1000, 1000)) # , bins=np.arange(min(taille), m + 0.2, 0.2), rwidth=0.5)
     # plot.hist(generer_genes(1000, 50)) # , bins=np.arange(min(taille), m + 0.2, 0.2), rwidth=0.5)
     # Affiche les tableaux
