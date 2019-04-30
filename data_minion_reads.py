@@ -235,10 +235,19 @@ def fracture(echantillons, n=65952, sigma=100):
 
 
 if __name__ == '__main__':
+    recherche_fichiers(
+        os.path.abspath(os.path.join(__file__, '..', '..', 'Données')),
+        os.path.abspath(os.path.join(__file__, '..', '..')),
+        os.path.abspath(os.path.join(__file__, '..'))
+    )
+    for folder in os.scandir('../Documents/'):
+        recherche_fichiers(os.path.abspath(folder.path))
+
+
     # ech = fracture(generer_genes(10, 1000000), 65952, 1)[0]
-    fig, plot = plt.subplots(1, 1)
-    for ech in fracture(generer_genes(1, 1000000), 65952, 10000):
-        plot.hist(ech)  # , bins=np.arange(min(taille), m + 0.2, 0.2), rwidth=0.5)
+    # fig, plot = plt.subplots(1, 1);
+    # for ech in fracture(generer_genes(1, 1000000), 65952, 10000):
+    #     plot.hist(ech)  # , bins=np.arange(min(taille), m + 0.2, 0.2), rwidth=0.5)
     # plot.hist(generer_genes(1000, 1000)) # , bins=np.arange(min(taille), m + 0.2, 0.2), rwidth=0.5)
     # plot.hist(generer_genes(1000, 50)) # , bins=np.arange(min(taille), m + 0.2, 0.2), rwidth=0.5)
     # Affiche les tableaux
