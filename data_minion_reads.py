@@ -154,11 +154,13 @@ def recherche_fichiers(*origines):
 
 def lire_tailles() -> typing.Dict[str, typing.List[int]]:
     recherche_fichiers(
+        os.path.abspath(os.path.join(__file__, '..', 'Donnees')),
+    )
+    '''recherche_fichiers(
         os.path.abspath(os.path.join(__file__, '..', '..', 'Données')),
         os.path.abspath(os.path.join(__file__, '..', '..')),
-        os.path.abspath(os.path.join(__file__, '..')),
-        os.path.abspath('../Documents')
-    )
+        os.path.abspath(os.path.join(__file__, '..'))
+    )'''
     return dict((item.name, json.load(open(item.path))) for item in os.scandir(os.path.join(cache, 'tailles')))
 
 
