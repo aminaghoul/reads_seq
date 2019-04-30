@@ -141,9 +141,12 @@ def recherche_fichiers(*origines):
     """Scanne les dossier à la recherche de données, rajoute les tailles dans le cache"""
     fichiers = []
     for origine in origines:
-        for element in os.scandir(origine):
-            if element.path.endswith('.fastq'):
-                fichiers.append(os.path.abspath(element.path))
+        # for element in os.scandir(origine):
+        for folder, folders, files in os.walk(os.path.abspath(origine)):
+            for file in files:
+                element = os.path.join(folder, file)
+                if element.endswith('.fastq'):
+                    fichiers.append(os.path.abspath(element))
     fichiers = list(set(sorted(fichiers)))
     for chemin in fichiers:
         extraire_fichier(chemin)
@@ -151,7 +154,10 @@ def recherche_fichiers(*origines):
 
 def lire_tailles() -> typing.Dict[str, typing.List[int]]:
     recherche_fichiers(
-        os.path.abspath(os.path.join(__file__, '..', '..', 'Données'))
+        os.path.abspath(os.path.join(__file__, '..', '..', 'Données')),
+        os.path.abspath(os.path.join(__file__, '..', '..')),
+        os.path.abspath(os.path.join(__file__, '..')),
+        os.path.abspath('../Documents')
     )
     return dict((item.name, json.load(open(item.path))) for item in os.scandir(os.path.join(cache, 'tailles')))
 
@@ -235,14 +241,7 @@ def fracture(echantillons, n=65952, sigma=100):
 
 
 if __name__ == '__main__':
-    recherche_fichiers(
-        os.path.abspath(os.path.join(__file__, '..', '..', 'Données')),
-        os.path.abspath(os.path.join(__file__, '..', '..')),
-        os.path.abspath(os.path.join(__file__, '..'))
-    )
-    for folder in os.scandir('../Documents/'):
-        recherche_fichiers(os.path.abspath(folder.path))
-
+    lire_tailles()
 
     # ech = fracture(generer_genes(10, 1000000), 65952, 1)[0]
     # fig, plot = plt.subplots(1, 1);
