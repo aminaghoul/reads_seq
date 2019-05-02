@@ -4,7 +4,7 @@ import numpy as np
 from scipy.optimize import fmin
 from scipy.stats import beta
 from scipy.special import gamma as gammaf
-
+from scipy import stats
 import random
 import time
 import re
@@ -42,11 +42,20 @@ for i in id:
     if i != tmp:
         taille.append(i)
     tmp = i
-plt.hist(taille, normed=True)
+n = len(taille)
+
+xx = np.linspace(0, max(taille))
+
+plt.hist(taille)
+plt.plot(xx, beta.pdf(xx, 1, len(taille)))
 plt.xlabel('taille en bp')
 plt.title('Distribution de la taille des reads-MINION')
 plt.show()
+print(stats.kstest(taille, 'beta', args=(1, len(taille))))
 
+plt.plot(xx, (1/1000000)*n * (1 - xx) ** (n - 1))
+
+plt.show()
 
 
 for i in taille:
@@ -91,6 +100,7 @@ plt.hist(norm, weights=weights)
 fitted=lambda x,a,b:gammaf(a+b)/gammaf(a)/gammaf(b)*x**(a-1)*(1-x)**(b-1) #pdf of beta
 
 xx=np.linspace(0,max(norm))
+
 plt.plot(xx,fitted(xx,alpha1,beta1),'g')
 plt.plot(xx,fitted(xx,alpha2,beta2),'b')
 plt.plot(xx,fitted(xx,alpha3,beta3),'r')
