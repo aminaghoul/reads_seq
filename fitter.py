@@ -1,6 +1,9 @@
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
+from scipy.optimize import fmin
+from scipy.stats import beta
+from scipy.special import gamma as gammaf
 
 import random
 import time
@@ -44,8 +47,56 @@ plt.xlabel('taille en bp')
 plt.title('Distribution de la taille des reads-MINION')
 plt.show()
 
+
+
 for i in taille:
     norm.append(i / max(taille))
+
+def betaNLL(param,*args):
+    """
+    Negative log likelihood function for beta
+    <param>: list for parameters to be fitted.
+    <args>: 1-element array containing the sample data.
+
+    Return <nll>: negative log-likelihood to be minimized.
+    """
+
+    a, b = param
+    data = args[0]
+    pdf = beta.pdf(data,a,b,loc=0,scale=1)
+    lg = np.log(pdf)
+    mask = np.isfinite(lg)
+    nll = -lg[mask].sum()
+    return nll
+
+mean=np.mean(norm)
+var=np.var(norm,ddof=1)
+alpha1=mean**2*(1-mean)/var-mean
+beta1=alpha1*(1-mean)/mean
+
+#------------------Fit using mle------------------
+result=fmin(betaNLL,[1,1],args=(norm,))
+alpha2,beta2=result
+
+#----------------Fit using beta.fit----------------
+alpha3,beta3,xx,yy=beta.fit(norm)
+
+print('\n# alpha,beta from moments:',alpha1,beta1)
+print('# alpha,beta from mle:',alpha2,beta2)
+print('# alpha,beta from beta.fit:',alpha3,beta3)
+
+#-----------------------Plot-----------------------
+weights = np.ones_like(norm) / float(len(norm))
+plt.hist(norm, weights=weights)
+fitted=lambda x,a,b:gammaf(a+b)/gammaf(a)/gammaf(b)*x**(a-1)*(1-x)**(b-1) #pdf of beta
+
+xx=np.linspace(0,max(norm))
+plt.plot(xx,fitted(xx,alpha1,beta1),'g')
+plt.plot(xx,fitted(xx,alpha2,beta2),'b')
+plt.plot(xx,fitted(xx,alpha3,beta3),'r')
+
+plt.show()
+
 
 weights = np.ones_like(norm) / float(len(norm))
 plt.hist(norm, weights=weights)
