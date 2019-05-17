@@ -1,0 +1,60 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{graphicx}
+\begin{document}
+\title{Rapport de stage}
+\maketitle
+
+
+Le  sujet du stage concerne l'exploitation des données (lectures)
+produites par les technologies de séquençage de 3e génération.
+
+Contrairement aux précédentes générations qui fournissaient des lectures
+de longueur constante et petite (au plus 400 bp), les technologies de 3e
+génération produisent une distribution de longueurs avec une médiane à
+environ 12 kbp et une queue de distribution qui va jusqu'à 60 kbp pour les
+lectures les plus longues.
+
+Dans un premier temps, j'aimerais vérifier l'idée que les distributions ainsi obtenues sont des distributions bêta (cas classique de la distribution
+des longueurs des morceaux d'un bâton qui a été découpé en N segments
+aléatoirement). Dans le cas du séquençage, N est sans doute aussi une
+variable aléatoire avec une distribution qui reste à déterminer.
+Nous avons dans un premier temps vérifier que les tailles de lectures suivent une loi de distribution bêta.
+
+\includegraphics[scale=0.5]{taille_reads_minion.png} 
+
+C'est le graphique de l'histogramme des tailles de reads.
+On sait que cette distribution de tailles suit une loi de bêta de paramètres 1 et n.
+On peut le montrer théoriquement :
+En effet, cf statistique d'ordre. et page 3 de Pycke
+
+On fit cet histogramme avec distribution bêta(1,N) où N est le nombre de lectures.
+On coupe aléatoirement un "bâton" en N morceaux aléatoirement.
+On prend un "bâton" de taille 1 000 000 que l'on coupe en 60 000 morceaux aléatoirement. Nous obtenons l'histogramme suivants : \\
+\includegraphics[scale=0.5]{hist.png}
+
+Pour vérifier que cette distribution suit une loi bêta de paramètres (1, 60 000), nous allons normaliser les tailles obtenues en les divisant par 1 000 000.\\
+\includegraphics[scale=0.5]{histbeta.png}\\
+La courbe rouge correspond à la densité de la loi bêta (1,60 000).\\
+On a estimer les paramètres de la loi bêta en utilisant la méthode du maximum de vraisemblance. En effet, nous avons minimiser la log vraisemblance négative et nous avons trouvé comme paramètres : 
+alpha = 1.1752289930435111 et bêta = 70512.1437318023
+Nous avons également estimé ces paramètres en utilisant la méthode des moments et on trouve : 
+alpha = 1.0575435001952862 et bêta = 63451.552468207636
+
+\includegraphics[scale=0.5]{histbetamv.png}\\
+Pour déterminer la variable aléatoire N on a tout d'abord testé plusieurs lois : loi normale, uniforme, poisson. 
+Avec N=65603, correspondant à la moyenne de chacune de ces lois.
+\\
+\includegraphics[scale=0.5]{normale.png}
+\includegraphics[scale=0.5]{uniforme.png}\\
+\includegraphics[scale=0.5]{poisson.png}
+
+On sait par ailleurs que lors du séquençage avec Minion, les plus petits fragments ont plus de chance "de passer" que les gros.
+On peut alors établir un seuil. 
+
+
+
+
+\end{document}
