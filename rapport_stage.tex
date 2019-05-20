@@ -29,7 +29,21 @@ C'est le graphique de l'histogramme des tailles de reads.
 On sait que cette distribution de tailles suit une loi de bêta de paramètres 1 et n.
 On peut le montrer théoriquement :
 En effet, cf statistique d'ordre. et page 3 de Pycke
-
+On s'intéresse au positionnement de lecture $S_{i}$ sur un génome de taille G. $S_{i}$ : position de départ de la $i_{ème}$ lecture sur le génome.
+Les lectures sont générées aléatoirement et uniformément le long du génome.
+Soit $D_{i}$= $S_{i+1}$-$S_{i}$ la distance entre 2 positions de départ consécutives.
+On s'intéresse aux statistiques d'ordre.
+Soit X une variable aléatoire continue et $X_{1}$, $X_{2}$, ... $X_{n}$ des variables aléatoires indépendantes et identiquement distribuées selon la distribution de X.
+On définit $X_{1}$ comme la plus petite des $X_{i}$ précédentes pour i allant de 1 à n.
+$X_{2}$ : la seconde plus petite des $X_{i}$ précédentes.
+On a donc $X_{1}$ est le minimum des $X_{i}$ et $X_{n}$ le maximum des $X_{i}$.
+On s'intéresse à l'évènement u<$X_{i}$<u+h
+Cet évènement correspond à l'évènement que i-1 variable aléatoire ont une valeur inférieur à u, 1 variable aléatoire à une valeur dans [u, u+h] et n-i variables aléatoires ont une valeur supérieure à u+h.
+La probabilité de cet évènement est une mutltinomiale où n essais sont distribués dans k=3 catégories avec les probabilités correspondantes.
+P(u<$X_{i}$<u+h) = $\frac{n!}{(i-1)!(n-i)!}$ $FX(u)^{i-1}$fX(u)h$[1-FX(u+h)]^{n-i}$
+où FX : la fonction de répartition de X
+et fX : la fonction densité de X.
+On a par ailleurs supposé que P(u<$X_{i}$<u+h)
 On fit cet histogramme avec distribution bêta(1,N) où N est le nombre de lectures.
 On coupe aléatoirement un "bâton" en N morceaux aléatoirement.
 On prend un "bâton" de taille 1 000 000 que l'on coupe en 60 000 morceaux aléatoirement. Nous obtenons l'histogramme suivants : \\
