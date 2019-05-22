@@ -52,6 +52,24 @@ print(dCompound(x,parentD,compoundD,compoundDist,params,shape1=1,shape2=1))
 
 ```
 
+
 ```{r}
-?dCompound
+parentD<-"beta"
+compoundD<-"geometric"
+params<-c(1./409995)
+x<-seq(from=0, to=0.0002, length.out=40)
+plot(x,dCompound(x,parentD,compoundD,compoundDist,params,shape1=1,shape2=0.1),xlim=c(0,0.0002),ylim=c(0,409995))
+print(dCompound(x,parentD,compoundD,compoundDist,params,shape1=1,shape2=1))
+
 ```
+
+```{r}
+parentD<-"beta"
+compoundD<-"binomial"
+params<-c(1500000, 409995./1500000)
+x<-seq(from=0, to=0.0003, length.out=80)
+plot(x,dCompound(x,parentD,compoundD,compoundDist,params,shape1=1,shape2=0.1),xlim=c(0,0.0003),ylim=c(0,409995.))
+print(dCompound(x,parentD,compoundD,compoundDist,params,shape1=1,shape2=1))
+
+```
+
