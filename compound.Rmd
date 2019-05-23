@@ -46,8 +46,8 @@ compoundDist <- c("geometric","poisson","negativebinomial","binomial",
 parentD<-"beta"
 compoundD<-"poisson"
 params<-c(409995)
-x<-seq(from=0, to=0.0002, length.out=40)
-plot(x,dCompound(x,parentD,compoundD,compoundDist,params,shape1=1,shape2=0.1),xlim=c(0,0.0002),ylim=c(0,409995))
+x<-seq(from=0, to=0.0003, length.out=40)
+curve(dCompound(x,parentD,compoundD,compoundDist,params,shape1=1,shape2=0.1),xlim=c(0,0.0003),ylim=c(0,40000))
 print(dCompound(x,parentD,compoundD,compoundDist,params,shape1=1,shape2=1))
 
 ```
@@ -57,8 +57,8 @@ print(dCompound(x,parentD,compoundD,compoundDist,params,shape1=1,shape2=1))
 parentD<-"beta"
 compoundD<-"geometric"
 params<-c(1./409995)
-x<-seq(from=0, to=0.0002, length.out=40)
-plot(x,dCompound(x,parentD,compoundD,compoundDist,params,shape1=1,shape2=0.1),xlim=c(0,0.0002),ylim=c(0,409995))
+x<-seq(from=0, to=0.0003, length.out=40)
+curve(dCompound(x,parentD,compoundD,compoundDist,params,shape1=1,shape2=0.1),xlim=c(0,0.0003),ylim=c(0,40995))
 print(dCompound(x,parentD,compoundD,compoundDist,params,shape1=1,shape2=1))
 
 ```
@@ -68,8 +68,22 @@ parentD<-"beta"
 compoundD<-"binomial"
 params<-c(1500000, 409995./1500000)
 x<-seq(from=0, to=0.0003, length.out=80)
-plot(x,dCompound(x,parentD,compoundD,compoundDist,params,shape1=1,shape2=0.1),xlim=c(0,0.0003),ylim=c(0,409995.))
+curve(dCompound(x,parentD,compoundD,compoundDist,params,shape1=1,shape2=0.1),xlim=c(0,0.0003),ylim=c(0,40995.))
 print(dCompound(x,parentD,compoundD,compoundDist,params,shape1=1,shape2=1))
 
 ```
+
+```{r}
+install.packages("rmutil")
+library(rmutil)
+
+
+```
+
+
+```{r}
+x<-seq(from=0, to=0.0003, length.out=80)
+curve(dbetabinom(x, 1000, 0.5, 1.1, log=FALSE))
+```
+
 
