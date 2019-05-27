@@ -83,7 +83,8 @@ library(rmutil)
 
 ```{r}
 x<-seq(from=0, to=0.0003, length.out=80)
-curve(dbetabinom(x, 1000, 0.5, 1.1, log=FALSE))
+b=65000
+curve(b*exp(b*log(1-x))/log(1-x)-(1/(log(1-x))**2)*(exp(b*log(1-x))-1),xlim=c(0,0.0003))
 ```
 
 
