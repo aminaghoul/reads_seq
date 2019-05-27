@@ -39,11 +39,25 @@ $X_{2}$ : la seconde plus petite des $X_{i}$ précédentes.
 On a donc $X_{1}$ est le minimum des $X_{i}$ et $X_{n}$ le maximum des $X_{i}$.
 On s'intéresse à l'évènement u<$X_{i}$<u+h
 Cet évènement correspond à l'évènement que i-1 variable aléatoire ont une valeur inférieur à u, 1 variable aléatoire à une valeur dans [u, u+h] et n-i variables aléatoires ont une valeur supérieure à u+h.
-La probabilité de cet évènement est une mutltinomiale où n essais sont distribués dans k=3 catégories avec les probabilités correspondantes.
-P(u<$X_{i}$<u+h) = $\frac{n!}{(i-1)!(n-i)!}$ $FX(u)^{i-1}$fX(u)h$[1-FX(u+h)]^{n-i}$
-où FX : la fonction de répartition de X
-et fX : la fonction densité de X.
-On a par ailleurs supposé que P(u<$X_{i}$<u+h)
+La probabilité de cet évènement est une multinomiale où n essais sont distribués dans k=3 catégories avec les probabilités correspondantes.
+P(u<$X_{i}$<u+h) = $\frac{n!}{(i-1)!(n-i)!} F_X(u)^{i-1}f_X(u)h[1-F_X(u+h)]^{n-i}$
+où $F_X $: la fonction de répartition de X
+et $f_X $: la fonction densité de X.
+On a par ailleurs supposé que P(u<$X_{i}$<u+h)$\approx f_X(u)h$ quand h est petit.
+Donc la densité de probabilité correspondante est :
+$f_{X(i)}(x) = \frac{n!}{(i-1)!(n-i)!} F_X(u)^{i-1}f_X(u)h[1-F_X(u+h)]^{n-i}$
+Si X est distribuée de façon uniforme sur (1-G) on a :
+$f_X(x)=\frac{1}{G}$  $F_X(x)=\frac{x}{G}$\\
+Dans ce cas : 
+$f_{X(i)}(x) = \frac{n!}{(i-1)!(n-i)!} (\frac{x}{G})^{i-1} \frac{1}{G} [1-\frac{x}{G}]^{n-i}$ avec x $ \in $[0,L]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+Si on pose $ \frac{x}{G}$, $\alpha=i$, $\beta=n-i+1$, y$\in$[0,1]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    \\ 
+$f_{X(i)}(x)= \frac{(\alpha+\beta-1)!}{G(\alpha-1)!(\beta-1)!}y^{\alpha-1}(1-y)^{\beta-1}=\frac{1}{G}beta(i,n-i+1) $\\
+On considère la densité de probabilité jointe pour $S_(i)$ et $S_{(i+1)}$\\
+$f_{X(i)X(i+1)}(x,y) = \frac{n!}{(i-1)!(n-i-1)!} (\frac{x}{G})^{i-1} \frac{1}{G} \frac{1}{G}[1-\frac{y}{G}]^{n-i-1}$ y>x
+Evènement $D_i$=d est le même que $S_{(i+1)}=x+d sachant que S(i)=x$
+P($D_i$=d)=P($S_{(i+1)}=x+d|S_i=x $)=$\frac{P(S_{(i+1)}=x+d,S_i=x}{P(S_i=x)} $
+Donc $\frac{(n-i)(1-x-d)^{n-i-1}}{G(1-x)^{n-i}}=\frac{n-i}{G(1-x)}[\frac{1-x-d}{1-x}]^{n-i-1}$ x$\in$[0,1]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+
 On fit cet histogramme avec distribution bêta(1,N) où N est le nombre de lectures.
 On coupe aléatoirement un "bâton" en N morceaux aléatoirement.
 On prend un "bâton" de taille 1 000 000 que l'on coupe en 60 000 morceaux aléatoirement. Nous obtenons l'histogramme suivants : \\
@@ -65,9 +79,21 @@ Avec N=65603, correspondant à la moyenne de chacune de ces lois.
 \includegraphics[scale=0.5]{uniforme.png}\\
 \includegraphics[scale=0.5]{poisson.png}
 
-On sait par ailleurs que lors du séquençage avec Minion, les plus petits fragments ont plus de chance "de passer" que les gros.
-On peut alors établir un seuil. 
+On calcule la densité de la loi composée H de la loi bêta F et uniforme G de paramètres 0, b.
 
+$p_{H}(x) = \int_{0}^{b} p_{F}(x|\theta) p_{G}(\theta)d\theta$
+
+$p_{H}(x) = \int_{0}^{b}n(1-x)^{n-1}\frac{1}{b}dn$
+
+On trouve : \\
+$\frac{be^{bln(1-x)}}{ln(1-x)}-\frac{1}{ln(1-x)^2}(e^{bln(1-x)}-1)$
+
+On calcule la densité de la loi composée H de la loi bêta F et de poisson G.
+
+
+$p_{H}(x) = \int_{0}^{+\infty} p_{F}(x|\theta) p_{G}(\theta)d\theta$
+
+$p_{H}(x) = \int_{0}^{+\infty}n(1-x)^{n-1}\frac{\lambda^{n}e^{-\lambda}}{n!}dn$
 
 
 
