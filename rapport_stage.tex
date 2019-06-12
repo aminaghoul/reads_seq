@@ -27,55 +27,56 @@ Nous avons dans un premier temps vérifier que les tailles de lectures suivent u
 
 C'est le graphique de l'histogramme des tailles de reads.
 On sait que cette distribution de tailles suit une loi de bêta de paramètres 1 et n.
-On peut le montrer théoriquement :
-En effet, cf statistique d'ordre. et page 3 de Pycke
-On s'intéresse au positionnement de lecture $S_{i}$ sur un génome de taille G. $S_{i}$ : position de départ de la $i_{ème}$ lecture sur le génome.
+On peut le montrer théoriquement. \\
+On s'intéresse au positionnement de lecture $S_{i}$ sur un génome de taille G. $S_{i}$ : position de départ de la $i_{ème}$ lecture sur le génome.\\
 Les lectures sont générées aléatoirement et uniformément le long du génome.
 Soit $D_{i}$= $S_{i+1}$-$S_{i}$ la distance entre 2 positions de départ consécutives.
-On s'intéresse aux statistiques d'ordre.
+On s'intéresse aux statistiques d'ordre.\\
 Soit X une variable aléatoire continue et $X_{1}$, $X_{2}$, ... $X_{n}$ des variables aléatoires indépendantes et identiquement distribuées selon la distribution de X.
-On définit $X_{1}$ comme la plus petite des $X_{i}$ précédentes pour i allant de 1 à n.
-$X_{2}$ : la seconde plus petite des $X_{i}$ précédentes.
+On définit $X_{1}$ comme la plus petite des $X_{i}$ précédentes pour i allant de 1 à n.\\
+$X_{2}$ : la seconde plus petite des $X_{i}$ précédentes.\\
 On a donc $X_{1}$ est le minimum des $X_{i}$ et $X_{n}$ le maximum des $X_{i}$.
-On s'intéresse à l'évènement u<$X_{i}$<u+h
-Cet évènement correspond à l'évènement que i-1 variable aléatoire ont une valeur inférieur à u, 1 variable aléatoire à une valeur dans [u, u+h] et n-i variables aléatoires ont une valeur supérieure à u+h.
-La probabilité de cet évènement est une multinomiale où n essais sont distribués dans k=3 catégories avec les probabilités correspondantes.
-P(u<$X_{i}$<u+h) = $\frac{n!}{(i-1)!(n-i)!} F_X(u)^{i-1}f_X(u)h[1-F_X(u+h)]^{n-i}$
+On s'intéresse à l'évènement u<$X_{i}$<u+h\\
+Cet évènement correspond à l'évènement que i-1 variable aléatoire ont une valeur inférieur à u, 1 variable aléatoire à une valeur dans [u, u+h] et n-i variables aléatoires ont une valeur supérieure à u+h.\\
+La probabilité de cet évènement est une multinomiale où n essais sont distribués dans k=3 catégories avec les probabilités correspondantes.\\
+P(u<$X_{i}$<u+h) = $\frac{n!}{(i-1)!(n-i)!} F_X(u)^{i-1}f_X(u)h[1-F_X(u+h)]^{n-i}$\\
 où $F_X $: la fonction de répartition de X
-et $f_X $: la fonction densité de X.
+et $f_X $: la fonction densité de X.\\
 On a par ailleurs supposé que P(u<$X_{i}$<u+h)$\approx f_X(u)h$ quand h est petit.
-Donc la densité de probabilité correspondante est :
-$f_{X(i)}(x) = \frac{n!}{(i-1)!(n-i)!} F_X(u)^{i-1}f_X(u)h[1-F_X(u+h)]^{n-i}$
+Donc la densité de probabilité correspondante est :\\
+$f_{X(i)}(x) = \frac{n!}{(i-1)!(n-i)!} F_X(u)^{i-1}f_X(u)h[1-F_X(u+h)]^{n-i}$\\
 Si X est distribuée de façon uniforme sur (1-G) on a :
 $f_X(x)=\frac{1}{G}$  $F_X(x)=\frac{x}{G}$\\
 Dans ce cas : 
 $f_{X(i)}(x) = \frac{n!}{(i-1)!(n-i)!} (\frac{x}{G})^{i-1} \frac{1}{G} [1-\frac{x}{G}]^{n-i}$ avec x $ \in $[0,L]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
-Si on pose $ \frac{x}{G}$, $\alpha=i$, $\beta=n-i+1$, y$\in$[0,1]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    \\ 
+\\Si on pose $ \frac{x}{G}$, $\alpha=i$, $\beta=n-i+1$, y$\in$[0,1]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    \\ 
 $f_{X(i)}(x)= \frac{(\alpha+\beta-1)!}{G(\alpha-1)!(\beta-1)!}y^{\alpha-1}(1-y)^{\beta-1}=\frac{1}{G}beta(i,n-i+1) $\\
 On considère la densité de probabilité jointe pour $S_(i)$ et $S_{(i+1)}$\\
-$f_{X(i)X(i+1)}(x,y) = \frac{n!}{(i-1)!(n-i-1)!} (\frac{x}{G})^{i-1} \frac{1}{G} \frac{1}{G}[1-\frac{y}{G}]^{n-i-1}$ y>x
-Evènement $D_i$=d est le même que $S_{(i+1)}=x+d sachant que S(i)=x$
-P($D_i$=d)=P($S_{(i+1)}=x+d|S_i=x $)=$\frac{P(S_{(i+1)}=x+d,S_i=x}{P(S_i=x)} $
+$f_{X(i)X(i+1)}(x,y) = \frac{n!}{(i-1)!(n-i-1)!} (\frac{x}{G})^{i-1} \frac{1}{G} \frac{1}{G}[1-\frac{y}{G}]^{n-i-1}$ y>x\\
+L'évènement $D_i$=d est le même que $S_{(i+1)}=x+d sachant que S(i)=x$
+P($D_i$=d)=P($S_{(i+1)}=x+d|S_i=x $)=$\frac{P(S_{(i+1)}=x+d,S_i=x}{P(S_i=x)} $\\
 Donc $\frac{(n-i)(1-x-d)^{n-i-1}}{G(1-x)^{n-i}}=\frac{n-i}{G(1-x)}[\frac{1-x-d}{1-x}]^{n-i-1}$ x$\in$[0,1]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
 
-On fit cet histogramme avec distribution bêta(1,N) où N est le nombre de lectures.
-On coupe aléatoirement un "bâton" en N morceaux aléatoirement.
-On prend un "bâton" de taille 1 000 000 que l'on coupe en 60 000 morceaux aléatoirement. Nous obtenons l'histogramme suivants : \\
+On sait que l'ADN est découpé aléatoirement (shot gun) ce qui est comparable à découper un bâton aléatoirement en N morceaux. 
+On prend un "bâton" de taille 1 000 000 que l'on coupe en 60 000 morceaux aléatoirement. 
+On fit cet histogramme avec distribution bêta(1,N) où N est le nombre de lectures.Nous obtenons l'histogramme suivants : \\
 \includegraphics[scale=0.5]{hist.png}
 
 Pour vérifier que cette distribution suit une loi bêta de paramètres (1, 60 000), nous allons normaliser les tailles obtenues en les divisant par 1 000 000.\\
 \includegraphics[scale=0.5]{histbeta.png}\\
 La courbe rouge correspond à la densité de la loi bêta (1,60 000).\\
 On a estimer les paramètres de la loi bêta en utilisant la méthode du maximum de vraisemblance. En effet, nous avons minimiser la log vraisemblance négative et nous avons trouvé comme paramètres : 
+
 alpha = 1.1752289930435111 et bêta = 70512.1437318023
 Nous avons également estimé ces paramètres en utilisant la méthode des moments et on trouve : 
 alpha = 1.0575435001952862 et bêta = 63451.552468207636
 
 \includegraphics[scale=0.5]{histbetamv.png}\\
-Pour déterminer la variable aléatoire N on a tout d'abord testé plusieurs lois : loi normale, uniforme, poisson. 
-Avec N=65603, correspondant à la moyenne de chacune de ces lois.
+Pour déterminer la variable aléatoire N on a tout d'abord testé plusieurs lois : loi binomiale, uniforme, poisson. \\
+En effet, la valeur du nombre de morceaux est entière on peut alors supposer que la variable aléatoire N est discrète.
+Avec N=65000, correspondant à la moyenne de chacune de ces lois.
 \\
-\includegraphics[scale=0.5]{normale.png}
+\includegraphics[scale=0.5]{binomiale.png}
 \includegraphics[scale=0.5]{uniforme.png}\\
 \includegraphics[scale=0.5]{poisson.png}
 
@@ -86,8 +87,8 @@ $p_{H}(x) = \int_{0}^{b} p_{F}(x|\theta) p_{G}(\theta)d\theta$
 $p_{H}(x) = \int_{0}^{b}n(1-x)^{n-1}\frac{1}{b}dn$
 
 On trouve : \\
-$\frac{be^{bln(1-x)}}{ln(1-x)}-\frac{1}{ln(1-x)^2}(e^{bln(1-x)}-1)$
-
+$\frac{be^{bln(1-x)}}{ln(1-x)}-\frac{1}{ln(1-x)^2}(e^{bln(1-x)}-1)$\\
+\includegraphics[scale=0.5]{beta_unif.png}\\
 On calcule la densité de la loi composée H de la loi bêta F et de poisson G.
 
 
@@ -96,8 +97,15 @@ $p_{H}(x) = \int_{0}^{+\infty} p_{F}(x|\theta) p_{G}(\theta)d\theta$
 $p_{H}(x) = \int_{0}^{+\infty}n(1-x)^{n-1}\frac{\lambda^{n}e^{-\lambda}}{n!}dn$
 
 
-\includegraphics[scale=0.5]{beta_unif.png}
 
 
+Soit N une variable aléatoire discrète qui représente le nombre de fragments obtenus.
+On considère dans un premier temps que N suit une loi de poisson de probabilité : 
+$p_{H}(N=n) =\frac{\lambda^{n}e^{-\lambda}}{n!}$
+avec $\lambda >0 $ et N entier naturel.
+
+Soit $X_i$ avec i =1,2,... la taille des fragments obtenus 
+$X_i$ sont indépendantes et identiquement distribuées selon une distribution bêta de paramètres $\alpha = 1$ et $\beta=n$.
+$p_{H}(x) =n(1-x)^{n-1}$ avec $x\in[0,1]$
 
 \end{document}
