@@ -45,23 +45,20 @@ compoundDist <- c("geometric","poisson","negativebinomial","binomial",
 "hypergeometric","thomas")
 parentD<-"beta"
 compoundD<-"poisson"
-params<-c(409995)
-x<-seq(from=0, to=0.0003, length.out=40)
-curve(dCompound(x,parentD,compoundD,compoundDist,params,shape1=1,shape2=0.1),xlim=c(0,0.0003),ylim=c(0,40000))
-print(dCompound(x,parentD,compoundD,compoundDist,params,shape1=1,shape2=1))
+params<-c(6000)
+x<-seq(from=0, to=0.00002, length.out=400)
+curve(dCompound(x,parentD,compoundD,compoundDist,params,shape1=1,shape2=6000),xlim=c(0,0.00002),ylim=c(0,6000))
+print(dCompound(x,parentD,compoundD,compoundDist,params,shape1=1,shape2=6000))
 
 ```
-
 
 ```{r}
-parentD<-"beta"
-compoundD<-"geometric"
-params<-c(1./409995)
-x<-seq(from=0, to=0.0003, length.out=40)
-curve(dCompound(x,parentD,compoundD,compoundDist,params,shape1=1,shape2=0.1),xlim=c(0,0.0003),ylim=c(0,40995))
-print(dCompound(x,parentD,compoundD,compoundDist,params,shape1=1,shape2=1))
-
+x<-seq(from=0, to=0.0003, length.out=80)
+n=409995
+l=409995
+curve(n*(1-x)**(n-1)*l*exp(-l+l*(1-x)**n), xlim=c(0,0.0003))
 ```
+
 
 ```{r}
 parentD<-"beta"
@@ -69,22 +66,44 @@ compoundD<-"binomial"
 params<-c(1500000, 409995./1500000)
 x<-seq(from=0, to=0.0003, length.out=80)
 curve(dCompound(x,parentD,compoundD,compoundDist,params,shape1=1,shape2=0.1),xlim=c(0,0.0003),ylim=c(0,40995.))
-print(dCompound(x,parentD,compoundD,compoundDist,params,shape1=1,shape2=1))
+print(momentCompound(1,parentD,compoundD,compoundDist,params,shape1=1,shape2=1))
 
 ```
 
 ```{r}
 install.packages("rmutil")
 library(rmutil)
-
-
 ```
 
 
 ```{r}
 x<-seq(from=0, to=0.0003, length.out=80)
 b=65000
-curve(b*exp(b*log(1-x))/log(1-x)-(1/(log(1-x))**2)*(exp(b*log(1-x))-1),xlim=c(0,0.0003))
+curve((b*exp(b*log(1-x))/log(1-x)-(1/(log(1-x))**2)*(exp(b*log(1-x))-1))/(1-x),xlim=c(0,0.0003))
+```
+```{r}
+?pbeta
+n=6000
+ curve(pbeta(x, 1, 6000), from = 0, to = 1)
+ curve((1-(1-x)**n), from = 0, to = 1)
 ```
 
+
+```{r}
+x<-seq(from=0, to=0.0003, length.out=80)
+b=409995
+n=1500000
+p=b/n
+curve(b*((1-x)**(b-1))*n*p*(1-p+p*(1-x)**b)**(n-1), xlim=c(0,0.0003))
+```
+
+```{r}
+
+x<-seq(from=0, to=0.0003, length.out=80)
+n=409995
+l=409995
+
+curve(n*(1-x)**(n-1)*l*exp(-l+l*(1-x)**n), xlim=c(0,0.0003))
+```
+```
 
