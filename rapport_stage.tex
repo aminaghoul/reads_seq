@@ -1,4 +1,4 @@
-\documentclass[12pt]{article}
+\documentclass{book}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[french]{babel}
@@ -6,6 +6,33 @@
 \begin{document}
 \title{Rapport de stage}
 \maketitle
+
+
+\part{Partie 1}
+	\chapter{Chapitre 1}
+		\section*{Une section}
+		\section[un titre plus court]{ Une section avec un nom méga mais alors 	vraiment méga trop giga long qui dépasse}
+		\subsection{Une sous-section}
+		\subsection{Une sous-section}
+	\chapter{Chapitre 2}
+		\section{Une section}
+			\subsection{Une sous-section}
+				\paragraph{Un paragraphe}
+			\subsection{Une sous-section}
+				\paragraph{Un paragraphe}
+		\section{Une section}
+	\chapter{Chapitre 3}
+		\section{Une section}
+		\section{Une section}
+
+\setcounter{tocdepth}{4}
+
+\renewcommand{\contentsname}{Sommaire} % Dans le corps du document,avant la commande \tableofcontents.
+
+\tableofcontents
+
+
+
 
 
 Le  sujet du stage concerne l'exploitation des données (lectures)
@@ -94,10 +121,7 @@ On calcule la densité de la loi composée H de la loi bêta F et de poisson G.
 
 $p_{H}(x) = \int_{0}^{+\infty} p_{F}(x|\theta) p_{G}(\theta)d\theta$
 
-$p_{H}(x) = \int_{0}^{+\infty}n(1-x)^{n-1}\frac{\lambda^{n}e^{-\lambda}}{n!}dn$
-
-
-
+$p_{H}(x) = \sum_{i=0}^{+\infty}n(1-x)^{n-1}\frac{\lambda^{n}e^{-\lambda}}{n!}$
 
 Soit N une variable aléatoire discrète qui représente le nombre de fragments obtenus.
 On considère dans un premier temps que N suit une loi de poisson de probabilité : 
@@ -106,6 +130,18 @@ avec $\lambda >0 $ et N entier naturel.
 
 Soit $X_i$ avec i =1,2,... la taille des fragments obtenus 
 $X_i$ sont indépendantes et identiquement distribuées selon une distribution bêta de paramètres $\alpha = 1$ et $\beta=n$.
-$p_{H}(x) =n(1-x)^{n-1}$ avec $x\in[0,1]$
+$p_{H}(x) =n(1-x)^{n-1}$ avec $x\in[0,1]$\\
+$p_{H}(x) = \sum_{i=0}^{+\infty}n(1-x)^{n-1}\frac{\lambda^{n}e^{-\lambda}}{n!}$\\
+$p_{H}(x)= \lambda e^{-\lambda}\sum_{i=0}^{+\infty}\frac{(\lambda (1-x))^{n-1}}{(n-1)!}$ \\
+$p_{H}(x)= \lambda e^{-\lambda}\sum_{i=1}^{+\infty}\frac{(\lambda (1-x))^{n}}{(n)!} + \frac{\lambda^{2}e^{-\lambda}}{1-x}$ \\
+$p_{H}(x)= \lambda e^{-\lambda x} + \frac{\lambda^{2}e^{-\lambda}}{1-x}$ \\
+C'est la densité de la loi composée bêta avec la loi de poisson de paramètre$\lambda$. \\
+On trace cette densité et on obtient le graphique suivant : \\
+\includegraphics[scale=0.5]{betapois.png}\\
+J'insère le premier \cite{ref}, le second \cite{ref2}, le troisième \cite{ref3}, le quatrième \cite{ref4}, le cinquième \cite{ref5} et le sixième \cite{ref6}.
+
+\bibliographystyle{} % Le style est mis entre accolades.
+\bibliography{biblio} % mon fichier de base de données s'appelle bibli.bib
+\bibliographystyle{plain}
 
 \end{document}
