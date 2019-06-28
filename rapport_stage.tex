@@ -22,7 +22,7 @@
 				\paragraph{Un paragraphe}
 		\section{Une section}
 	\chapter{Chapitre 3}
-		\section{Une section}
+		\section{Une section} 
 		\section{Une section}
 
 \setcounter{tocdepth}{4}
@@ -107,6 +107,7 @@ Avec N=65000, correspondant à la moyenne de chacune de ces lois.
 \includegraphics[scale=0.5]{uniforme.png}\\
 \includegraphics[scale=0.5]{poisson.png}
 
+On peut supposer que N suit une loi de poisson car ...
 On calcule la densité de la loi composée H de la loi bêta F et uniforme G de paramètres 0, b.
 
 $p_{H}(x) = \int_{0}^{b} p_{F}(x|\theta) p_{G}(\theta)d\theta$
@@ -114,8 +115,12 @@ $p_{H}(x) = \int_{0}^{b} p_{F}(x|\theta) p_{G}(\theta)d\theta$
 $p_{H}(x) = \int_{0}^{b}n(1-x)^{n-1}\frac{1}{b}dn$
 
 On trouve : \\
-$\frac{be^{bln(1-x)}}{ln(1-x)}-\frac{1}{ln(1-x)^2}(e^{bln(1-x)}-1)$\\
+$\frac{be^{(b-1)ln(1-x)}}{bln(1-x)}+\frac{e^{-ln(1-x)}-e^{(b-1)ln(1-x)}}{b(ln(1-x))^2}$\\
+
+On trace cette densité en prenant b = 60 000*2.
+En effet, on suppose que 60 000 est égal à l'espérance de la loi uniforme de paramètres 0,b.\\
 \includegraphics[scale=0.5]{beta_unif.png}\\
+On remarque que cette densité ressemble à la densité de la loi bêta de paramètres 1, 60 000. \\
 On calcule la densité de la loi composée H de la loi bêta F et de poisson G.
 
 
@@ -138,6 +143,11 @@ $p_{H}(x)= \lambda e^{-\lambda x} + \frac{\lambda^{2}e^{-\lambda}}{1-x}$ \\
 C'est la densité de la loi composée bêta avec la loi de poisson de paramètre$\lambda$. \\
 On trace cette densité et on obtient le graphique suivant : \\
 \includegraphics[scale=0.5]{betapois.png}\\
+
+Le pacbio : enlève par exemple longueurs <8kpb. Machine pas capable de traiter les morceaux en entiers elle doit les tronquer.
+
+MINION biais tirer les plus petits.
+
 J'insère le premier \cite{ref}, le second \cite{ref2}, le troisième \cite{ref3}, le quatrième \cite{ref4}, le cinquième \cite{ref5} et le sixième \cite{ref6}.
 
 \bibliographystyle{} % Le style est mis entre accolades.
