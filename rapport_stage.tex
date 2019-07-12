@@ -4,35 +4,12 @@
 \usepackage[french]{babel}
 \usepackage{graphicx}
 \begin{document}
-\title{Rapport de stage}
-\maketitle
 
+Remerciements
 
-\part{Partie 1}
-	\chapter{Chapitre 1}
-		\section*{Une section}
-		\section[un titre plus court]{ Une section avec un nom méga mais alors 	vraiment méga trop giga long qui dépasse}
-		\subsection{Une sous-section}
-		\subsection{Une sous-section}
-	\chapter{Chapitre 2}
-		\section{Une section}
-			\subsection{Une sous-section}
-				\paragraph{Un paragraphe}
-			\subsection{Une sous-section}
-				\paragraph{Un paragraphe}
-		\section{Une section}
-	\chapter{Chapitre 3}
-		\section{Une section} 
-		\section{Une section}
+Avant tout développement sur cette expérience professionnelle, il apparaît opportun de commencer ce rapport de stage par des remerciements, à ceux qui m’ont beaucoup appris au cours de ce stage, et même à ceux qui ont eu la gentillesse de faire de ce stage un moment très profitable.
 
-\setcounter{tocdepth}{4}
-
-\renewcommand{\contentsname}{Sommaire} % Dans le corps du document,avant la commande \tableofcontents.
-
-\tableofcontents
-
-
-
+Aussi, je remercie [•], mon maître de stage qui m’a formé et accompagné tout au long de cette expérience professionnelle avec beaucoup de patience et de pédagogie. Enfin, je remercie l’ensemble des employés de [•] pour les conseils qu’ils ont pu me prodiguer au cours de ces deux mois.
 
 
 Le  sujet du stage concerne l'exploitation des données (lectures)
@@ -108,14 +85,13 @@ Avec N=65000, correspondant à la moyenne de chacune de ces lois.
 \includegraphics[scale=0.5]{poisson.png}
 
 On peut supposer que N suit une loi de poisson car ...
-On calcule la densité de la loi composée H de la loi bêta F et uniforme G de paramètres 0, b.
+On calcule la densité de la loi composée H de la loi bêta F et uniforme G de paramètres nmin, nmax.
 
 $p_{H}(x) = \int_{0}^{b} p_{F}(x|\theta) p_{G}(\theta)d\theta$
 
-$p_{H}(x) = \int_{0}^{b}n(1-x)^{n-1}\frac{1}{b}dn$
+$p_{H}(x) = \frac{e^{-ln(1-x)}}{nmax-nmin}(\frac{nmaxe^{nmaxln(1-x)}-nmine^{nminln(1-x)}}{ln(1-x)}+\frac{e^{nminln(1-x)}-e^{nmaxln(1-x)}}{(ln(1-x))^2})$
 
-On trouve : \\
-$\frac{be^{(b-1)ln(1-x)}}{bln(1-x)}+\frac{e^{-ln(1-x)}-e^{(b-1)ln(1-x)}}{b(ln(1-x))^2}$\\
+
 
 On trace cette densité en prenant b = 60 000*2.
 En effet, on suppose que 60 000 est égal à l'espérance de la loi uniforme de paramètres 0,b.\\
@@ -141,6 +117,11 @@ $p_{H}(x)= \lambda e^{-\lambda}\sum_{i=0}^{+\infty}\frac{(\lambda (1-x))^{n-1}}{
 $p_{H}(x)= \lambda e^{-\lambda}\sum_{i=1}^{+\infty}\frac{(\lambda (1-x))^{n}}{(n)!} + \frac{\lambda^{2}e^{-\lambda}}{1-x}$ \\
 $p_{H}(x)= \lambda e^{-\lambda x} + \frac{\lambda^{2}e^{-\lambda}}{1-x}$ \\
 C'est la densité de la loi composée bêta avec la loi de poisson de paramètre$\lambda$. \\
+$p_{H}(x) = \sum_{n=0}^{+\infty}n(1-x)^{n-1}\frac{\lambda^{n}e^{-\lambda}}{n!} \\ p_{H}(x) = \sum_{n=1}^{+\infty}n(1-x)^{n-1}\frac{\lambda^{n}e^{-\lambda}}{n!} + 0 \\
+p_{H}(x) = \lambda e^{-\lambda}\sum_{k=0}^{+\infty}\frac{((1-x)\lambda)^{k}}{(k)!} \\
+p_{H}(x) = \lambda e^{-\lambda}e^{(1-x)\lambda} \\
+p_{H}(x) = \lambda e^{-\lambda x}
+$
 On trace cette densité et on obtient le graphique suivant : \\
 \includegraphics[scale=0.5]{betapois.png}\\
 
