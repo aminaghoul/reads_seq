@@ -1,0 +1,105 @@
+\documentclass[12pt,a4paper]{article} % Format de page
+\usepackage[utf8x]{inputenc} % Pour les caractères accentués
+\usepackage[T1]{fontenc} % Encodage de caractères
+\usepackage{aeguill} % moins flou que la police vectorielle Latin Modern
+\usepackage[frenchb]{babel} % Règles typographiques françaises
+\usepackage{graphicx} % Insérer des images
+\usepackage{hyperref} % Créer des liens et des signets
+\hypersetup{
+colorlinks=true, %colorise les liens
+breaklinks=true, %permet le retour à la ligne dans les liens trop longs
+urlcolor= blue, %couleur des hyperliens
+linkcolor= black, %couleur des liens internes
+citecolor=black, %couleur des références
+pdftitle={Rapport de stage}, %informations apparaissant dans
+pdfauthor={Anonyme}, %les informations du document
+pdfsubject={Simulation} %sous Acrobat.
+}
+\addtolength{\textwidth}{2cm} % Marges moins larges
+\addtolength{\oddsidemargin}{-1cm} % Recentrage
+% En-têtes du document
+\title{Rapport de stage}
+\author{Anonyme}
+\date{14 avril 2009}
+% Début du document
+\begin{document}
+% Titre
+\pagenumbering{roman}
+\maketitle
+% Table des matières
+\newpage
+\section*{Remerciements}
+
+Avant tout développement sur cette expérience professionnelle, il apparaît opportun de commencer ce rapport de stage par des remerciements, à ceux qui m’ont beaucoup appris au cours de ce stage, et même à ceux qui ont eu la gentillesse de faire de ce stage un moment très profitable.
+
+Aussi, je remercie Monsieur Jean-François Gibrat, mon maître de stage qui m’a formé et accompagné tout au long de cette expérience professionnelle avec beaucoup de patience et de pédagogie. Enfin, je remercie l’ensemble des employés de l'INRA pour les conseils qu’ils ont pu me prodiguer au cours de ce stage.
+\newpage
+\tableofcontents
+\newpage
+\section{Introduction} 
+Le  sujet du stage concerne l'étude de la distribution des longueurs des données (lectures) produites par les technologies de séquençage de 3ème génération.
+Dans un premier temps, on vérifiera l'idée que les distributions ainsi obtenues sont des distributions bêta (cas classique de la distribution
+des longueurs des morceaux d'un bâton qui a été découpé en N segments
+aléatoirement). Dans le cas du séquençage, N est également une
+variable aléatoire avec une distribution qui reste à déterminer.
+L'objectif de ce stage est de trouver une expression analytique de cette distribution.
+\newpage
+\section{Contexte du stage} 
+
+
+Mon stage a été réalisé à l'INRA (Institut national de la recherche agronomique) dans l'unité de recherche "Mathématiques et Informatique Appliquées du Génome à l'Environnement" (MaIAGE), dans l'équipe StatInfOmics (Statistique et Bioinformatique des données Omiques).
+
+Cet institut est un organisme français de recherche en agronomie ayant le statut d’Établissement public à caractère scientifique et technologique, et sous la double tutelle du ministère chargé de la Recherche et du ministère chargé de l’Agriculture. Il est le premier institut de recherche agronomique en Europe et deuxième dans le monde en nombre de publications en sciences agricoles et en sciences de la plante et de l'animal.
+
+L'unité de recherche MaIAGE regroupe des mathématiciens, des informaticiens, des bioinformaticiens et des biologistes autour de questions de biologie et agro-écologie, allant de l'échelle moléculaire à l'échelle du paysage en passant par l'étude de l'individu, de populations ou d'écosystèmes.
+L'unité développe des méthodes mathématiques et informatiques originales de portée générique ou motivées par des problèmes biologiques précis. Elle s'implique aussi dans la mise à disposition de bases de données et de logiciels permettant aux biologistes d'utiliser les outils dans de bonnes conditions ou d'exploiter automatiquement la littérature scientifique.
+
+L'inférence statistique et la modélisation dynamique sont des compétences fortes de l'unité, auxquelles s'ajoutent la bioinformatique, l'automatique et l'algorithmique. Les activités de recherche et d'ingénierie s'appuient également sur une forte implication dans les disciplines destinatrices : écologie, environnement, biologie moléculaire et biologie des systèmes.
+\newpage
+\section{Objectifs de l'équipe} \subsection{Test}
+J'ai effectué mon stage dans l'équipe StatInfOmics: Statistique et Bioinformatique des données Omiques.
+Cette équipe vise à développer et mettre en oeuvre des méthodes statistiques et bioinformatiques dédiées à l’analyse de données “omiques”. D’un point de vue biologique, les questions abordées concernent principalement l’annotation structurale et fonctionnelle des génomes, les régulations géniques, la dynamique évolutive des génomes, et la caractérisation d’écosystèmes microbiens en terme de diversité et de fonctions présentes ; une cible commune étant la relation entre génotype et phénotype. Une part de plus en plus importante de notre activité est relative à l’intégration de données “omiques” hétérogènes pour en extraire de l’information pertinente et aussi prédire des processus biologiques. D’un point de vue méthodologique, nos travaux sont essentiellement d’ordre statistique : estimation de distributions, inférence de modèles à variables latentes, prédiction de relations entre jeux de variables, segmentation, visualisation et classification, avec une attention particulière au cadre de la grande dimension qui caractérise la majorité des jeux de données “omiques” étudiés. Ces recherches s’appuient souvent sur une ingénierie bioinformatique très forte.
+\newpage
+\section{Missions effectuées} \subsection{Test}
+Contrairement aux précédentes générations qui fournissaient des lectures
+de longueur constante et petite (au plus 400 bp), les technologies de 3e
+génération produisent une distribution de longueurs avec une médiane à
+environ 12 kbp et une queue de distribution qui va jusqu'à 60 kbp pour les
+lectures les plus longues.
+- Vérifier distribution bêta
+- comprendre méthodes séquençage Minion pacbio
+- déterminer loi de N, loi séquenceur
+- loi composée
+- code python simulation et théorique
+- optmisation paramètres max de vraisemblance
+- choisir loi
+
+\section{Activités et productions} 
+
+\section{Conclusion - Perspectives} 
+lander-watermann
+\newpage
+\listoffigures
+\newpage
+\newpage
+\bibliographystyle{plain-fr}
+\nocite{*}
+\bibliography{rapport}
+\end{document} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
