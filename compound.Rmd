@@ -1,0 +1,153 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+install.packages("hypergeo")
+install.packages("Compounding")
+```
+
+```{r}
+
+library(Compounding)
+```
+
+```{r}
+dCompound <-
+function(x,parent,compound,compoundDist,params,...) {
+    if (!exists(paste("p",parent,sep=""))) {
+        return(paste("The parent distribution",parent,"doesn't exist"))
+    }
+    if (!is.element(compound,compoundDist)) {
+        return(paste("The discrete distribution",compound,"doesn't exist"))
+    }
+    xval <- double(length(x))
+    f <- get(paste("d", parent, sep = ""), mode = "function")
+    F <- get(paste("p", parent, sep = ""), mode = "function")
+    phi <- get(paste("pgf",compound,sep=""), mode = "function")
+    phiD <- get(paste("pgfD",compound,sep=""), mode = "function")
+    xval <- phiD(1-F(x,...),params)*f(x,...)/(1-phi(0,params))
+    return(xval)
+}
+```
+
+```{r}
+install.packages("ggplot2")
+```
+```{r}
+library(ggplot2)
+```
+
+
+```{r}
+compoundDist <- c("geometric","poisson","negativebinomial","binomial",
+"logarithmic","binomialbinomial","binomialpoisson",
+"poissonbinomial","neymantypea","polyaaeppli",
+"poissonpascal","pascalpoisson",
+"logarithmicbinomial","logarithmicpoisson",
+"poissonlindley",
+"hyperpoisson","yule","waring","kattitypeh1",
+"kattitypeh2","neymantypeb","neymantypec",
+"hypergeometric","thomas")
+parentD<-"beta"
+compoundD<-"poisson"
+params<-c(250)
+x<-seq(from=0, to=30000, length.out=400)
+Fun = function(x){
+  dCompound(x,parentD,compoundD,compoundDist,params,shape1=1,shape2=250)
+}
+  #plot(dCompound(x,parentD,compoundD,compoundDist,params,shape1=1,shape2=60000),xlim=c(0,0.0003),ylim=c(0,60000))
+p9 <- ggplot(data.frame(x = seq(from=0, to=30000, length.out=400)), aes(x =x)) + ggtitle("Densité loi composée bêta-poisson")+
+        stat_function(fun = Fun)
+p9
+moy = momentCompound(1,parentD,compoundD,compoundDist,params,shape1=1,shape2=250)
+var = momentCompound(2,parentD,compoundD,compoundDist,params,shape1=1,shape2=250)
+
+print(moy)
+print(var)
+
+print(60000/(60001*60001*60002))
+```
+```{r}
+data(compoundDist)
+parentD <- "beta"
+compoundD <- "poisson"
+curve(dCompound(x, parentD, compoundD, compoundDist,60000,
+shape1=1, shape2=60000), 0,0.0003, xlab = "x", ylab = "f(x)", main="PDF of beta-Poisson distribution")
+```
+```{r}
+n=60000
+ curve(dbeta(x, 1, 60000), from = 0, to = 30000)
+```
+
+```{r}
+#poisson-beta numerique
+
+poisbeta = function(x){
+  l*exp(-l*x)
+
+l=60000
+p <- ggplot(data.frame(x = seq(from=0, to=0.0003, length.out=400)), aes(x = x)) +
+        stat_function(fun = poisbeta)
+p = p + ggtitle("Densité de la loi composée bêta-poisson")
+p
+```
+
+
+
+```{r}
+parentD<-"beta"
+compoundD<-"binomial"
+params<-c(1500000, 60000/1500000)
+x<-seq(from=0, to=0.0003, length.out=80)
+curve(dCompound(x,parentD,compoundD,compoundDist,params,shape1=1,shape2=60000),xlim=c(0,0.0003))
+print(momentCompound(1,parentD,compoundD,compoundDist,params,shape1=1,shape2=1))
+
+```
+```{r}
+?rbeta
+df <-data.frame(donnees=as.vector(rbind(rbeta(100000,shape1=1,shape2=60000),rbeta(100000,shape1=1,shape2=60000))))
+
+print(df)
+n=length(df)
+
+ggplot(df,aes(x=donnees)) + geom_histogram(bins=20,fill="red",alpha = 0.5) +  ggtitle("Histogramme avec 100 intervalles") +  labs(y="Fréquences")
+```
+
+
+```{r}
+x<-seq(from=0, to=10,length.out=8000)
+?dgeom
+curve(dgeom(x,0.3),xlim=c(0,10))
+print(dgeom(10,0.03))
+```
+
+```{r}
+library(stats4)
+set.seed(1001)
+
+N <- 100
+
+x <- read.table("./pacbio1.txt")
+
+
+LL <- function(mu, k,l) {
+    g=1000000
+    a = (mu*k)
+    b= (mu*x)^(k-1)
+    c= (exp(-((mu*x))^k))
+    d= (exp(-l*x)-exp(-l*g))
+    R = a*b*c*d
+    #
+    -sum(log(R))
+}
+mle(LL, start = list(mu = 1, k=1, l =1), method = "L-BFGS-B", lower = c(-Inf, 0),
+      upper = c(Inf, Inf))
+ 
+
+mle(minuslogl = LL, start = list(mu = 1, k=1, l =1), method = "L-BFGS-B",
+    lower = c(-Inf, 0), upper = c(Inf, Inf))
+```
+
