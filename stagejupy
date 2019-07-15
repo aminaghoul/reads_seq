@@ -1,0 +1,112 @@
+import random
+
+import scipy.stats
+
+from numpy import exp
+from numpy import pi
+from numpy import sqrt
+
+import numpy as np
+from matplotlib import pyplot as plt
+
+from scipy.optimize import fmin
+from scipy.stats import geom,  expon , beta
+import seaborn as sns
+sns.set(color_codes=True)
+from functools import partial
+from itertools import chain
+from numpy.random import choice
+
+monFichier = open("../Documents/PACBIO/pacbiors2/DRR070681_subreads.fastq", "r") #MINION
+taille = []
+f = []
+norm = []
+
+for line in monFichier:
+    fields = line.strip().split()
+    for idx, word in enumerate(fields):
+        f.append(word)
+
+for i, element in enumerate(f):
+    if element.endswith("/1") and i + 1 < len(f):
+        taille.append(len(f[i + 1]))
+g = sum(taille)
+norm = [i / 3711100 for i in taille]
+plt.title("Distribution de la longueur des lectures")
+plt.xlabel("taille en bp")
+plt.hist(taille,range = (0, 20000),bins =40)
+print(len(taille))
+
+from math import *
+def weib(x,n,a):
+    return (a / n) * (x / n)**(a - 1) * np.exp(-(x / n)**a)
+
+from matplotlib.legend_handler import HandlerLine2D
+x=np.linspace(0,20000,100)
+
+plt.title('Densité de la loi composée * g')
+
+def geome(x,p):    
+    return (1-p)*p**x
+
+l= 100
+p=0.99
+
+print(l)
+print(p)
+from bigfloat import *
+def beta_poisson_f(x, l):
+    return (l*np.exp(-l*x))
+
+
+f=beta_poisson_f(x,l)
+def fweib(x, mu,k, l):
+    g=1000000
+    a = (mu*k)
+    b= (mu*x)**(k-1)
+    c= (exp(-((mu*x))**k,precision(100)))
+    d= (exp(-l*x,precision(100))-exp(-l*g,precision(100)))
+    return a*b*c*d
+
+k=1.25
+norme = [i**k for i in norm]
+mu = (len(norm)/(sum(norme)))**(1/k)
+line1, =plt.plot(x,fweib(x/1000000, 165.18352890572584,1.3886195498863754,1.9364251414314578e-05))
+#line2, =plt.plot(x,f*(geome(x,p)+(1-geome(x,p))/x))
+t =[0.002,0.002,0.002,0.03,0.1,0.1]
+#plt.hist(norm,bins=30)
+print(len(norm))
+plt.show()
+
+def log_vraissemblance(param, *args):
+    mu,k, l = param
+    data = args[0]
+    L = []
+    for x in data:
+        y =  fweib(x/1000000,mu,k,l)
+        L.append(log(y,precision(100)))  
+    return -1*sum(L) 
+  
+
+
+result = fmin(log_vraissemblance, [1, 1.2,1],args=(taille,))
+alpha2, beta2, c = result
+
+print("Les paramètres estimés par la méthode de la vraisemblance sont : \nalpha = ", alpha2, ", beta = ",beta2,", beta = ",c)
+
+g = 1000000
+taill = [120,450,130,250,140,205,408,506,708,100,20,30,10]
+n = len(taill)
+l= 0.0019
+s = 0
+for i in taille:
+    if i < g:    
+        t = ((g-i)*exp(int(l*(g-i)),precision(100)))/(exp(int(l*(g-i)),precision(100))-1)    
+        s = s+t       
+        t=0
+print(s)        
+print(g*n)
+
+from bigfloat import *
+
+exp(5000,precision(100))
