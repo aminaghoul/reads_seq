@@ -110,3 +110,112 @@ print(g*n)
 from bigfloat import *
 
 exp(5000,precision(100))
+
+from math import *
+def weib(x,n,a):
+    return (a / n) * (x / n)**(a - 1) * np.exp(-(x / n)**a)
+
+from matplotlib.legend_handler import HandlerLine2D
+x=np.linspace(0,20000,100)
+
+plt.title('Densité de la loi composée * g')
+
+def geome(x,p):    
+    return (1-p)*p**x
+
+l= 100
+p=0.99
+
+print(l)
+print(p)
+from bigfloat import *
+def beta_poisson_f(x, l):
+    return (l*np.exp(-l*x))
+
+
+f=beta_poisson_f(x,l)
+def fweib(x, mu,k, l):
+    g=2000000
+    a = (mu*k)
+    b= (mu*x)**(k-1)
+    c= (np.exp(-((mu*x))**k))
+    d= (np.exp(-l*x)-np.exp(-l*g))
+    return a*b*c*d
+
+k=1.6
+norme = [i**k for i in taille]
+mu = (len(taille)/(sum(norme)))**(1/k)
+print(mu)
+line1, =plt.plot(x,fweib(x, 0.00016514096323243287,1.3886076493660475,2.955198141277528e-06))
+plt.hist(taille,range = (0, 20000),bins =40,  density=True)
+plt.show()
+
+import statsmodels.datasets
+import scipy.stats as st
+dist = st.expon
+args = dist.fit(taille)
+args
+
+def log_vraissemblance(param, *args):
+    mu,k, l = param
+    data = args[0]
+    L = []
+    for x in data:
+        y =  fweib(x,mu,k,l)
+        L.append(np.log(y))  
+    return -1*sum(L) 
+  
+k=1.3886076493660475
+norme = [i**k for i in taille]
+mu = (len(taille)/(sum(norme)))**(1/k)
+print(mu)
+"""
+result = fmin(log_vraissemblance, [0.00016514096323243287, 1.3886076493660475,2.955198141277528e-06],args=(taille,))
+alpha2, beta2, c = result
+
+print("Les paramètres estimés par la méthode de la vraisemblance sont : \nalpha = ", alpha2, ", beta = ",beta2,", beta = ",c)
+"""
+
+g = 100000
+taill = [120,450,130,250,140,205,408,506,708,100,20,30,10]
+n = len(taill)
+l= 20
+s = 0
+for i in taille[:100]:
+    if i < g:    
+        t = ((g-i)*exp((l*(g-i)),precision(10)))/(exp((l*(g-i)),precision(10))-1)    
+        s = s+t   
+       
+        t=0
+print(s)        
+print(g*n)
+
+from bigfloat import *
+
+import matplotlib.pyplot as plt
+from scipy.optimize import curve_fit
+
+xdata = np.linspace(0,20000,1000)
+y = fweib(xdata, 0.0016151326818010872, 1.34,0.01)
+np.random.seed(1729)
+#y_noise = 0.2 * np.random.normal(size=xdata.size)
+ydata = y 
+#+ y_noise
+plt.plot(xdata, ydata, 'b-', label='data')
+
+popt, pcov = curve_fit(fweib, xdata, ydata)
+popt
+
+plt.plot(xdata, fweib(xdata, *popt), 'r-',
+         label='fit: a=%5.3f, b=%5.3f, c=%5.3f' % tuple(popt))
+         
+popt, pcov = curve_fit(fweib, xdata, ydata, bounds=(0, [3., 10000, 0.5]))
+popt
+
+plt.plot(xdata, fweib(xdata, *popt), 'g--',
+         label='fit: a=%5.3f, b=%5.3f, c=%5.3f' % tuple(popt))
+
+plt.xlabel('x')
+plt.ylabel('y')
+plt.legend()
+plt.show()
