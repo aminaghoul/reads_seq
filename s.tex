@@ -75,7 +75,67 @@ lectures les plus longues.
 - choisir loi
 
 \section{Activités et productions} 
+On sait que cette distribution de tailles suit une loi de bêta de paramètres 1 et n.
+On peut le montrer théoriquement. \\
+On s'intéresse au positionnement de lecture $S_{i}$ sur un génome de taille G. $S_{i}$ : position de départ de la $i_{ème}$ lecture sur le génome.\\
+Les lectures sont générées aléatoirement et uniformément le long du génome.
+Soit $D_{i}$= $S_{i+1}$-$S_{i}$ la distance entre 2 positions de départ consécutives.
+On s'intéresse aux statistiques d'ordre.\\
+Soit X une variable aléatoire continue et $X_{1}$, $X_{2}$, ... $X_{n}$ des variables aléatoires indépendantes et identiquement distribuées selon la distribution de X.
+On définit $X_{1}$ comme la plus petite des $X_{i}$ précédentes pour i allant de 1 à n.\\
+$X_{2}$ : la seconde plus petite des $X_{i}$ précédentes.\\
+On a donc $X_{1}$ est le minimum des $X_{i}$ et $X_{n}$ le maximum des $X_{i}$.
+On s'intéresse à l'évènement u<$X_{i}$<u+h\\
+Cet évènement correspond à l'évènement que i-1 variable aléatoire ont une valeur inférieur à u, 1 variable aléatoire à une valeur dans [u, u+h] et n-i variables aléatoires ont une valeur supérieure à u+h.\\
+La probabilité de cet évènement est une multinomiale où n essais sont distribués dans k=3 catégories avec les probabilités correspondantes.\\
+P(u<$X_{i}$<u+h) = $\frac{n!}{(i-1)!(n-i)!} F_X(u)^{i-1}f_X(u)h[1-F_X(u+h)]^{n-i}$\\
+où $F_X $: la fonction de répartition de X
+et $f_X $: la fonction densité de X.\\
+On a par ailleurs supposé que P(u<$X_{i}$<u+h)$\approx f_X(u)h$ quand h est petit.
+Donc la densité de probabilité correspondante est :\\
+$f_{X(i)}(x) = \frac{n!}{(i-1)!(n-i)!} F_X(u)^{i-1}f_X(u)h[1-F_X(u+h)]^{n-i}$\\
+Si X est distribuée de façon uniforme sur (1-G) on a :
+$f_X(x)=\frac{1}{G}$  $F_X(x)=\frac{x}{G}$\\
+Dans ce cas : 
+$f_{X(i)}(x) = \frac{n!}{(i-1)!(n-i)!} (\frac{x}{G})^{i-1} \frac{1}{G} [1-\frac{x}{G}]^{n-i}$ avec x $ \in $[0,L]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+\\Si on pose $ \frac{x}{G}$, $\alpha=i$, $\beta=n-i+1$, y$\in$[0,1]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    \\ 
+$f_{X(i)}(x)= \frac{(\alpha+\beta-1)!}{G(\alpha-1)!(\beta-1)!}y^{\alpha-1}(1-y)^{\beta-1}=\frac{1}{G}beta(i,n-i+1) $\\
+On considère la densité de probabilité jointe pour $S_(i)$ et $S_{(i+1)}$\\
+$f_{X(i)X(i+1)}(x,y) = \frac{n!}{(i-1)!(n-i-1)!} (\frac{x}{G})^{i-1} \frac{1}{G} \frac{1}{G}[1-\frac{y}{G}]^{n-i-1}$ y>x\\
+L'évènement $D_i$=d est le même que $S_{(i+1)}=x+d sachant que S(i)=x$
+P($D_i$=d)=P($S_{(i+1)}=x+d|S_i=x $)=$\frac{P(S_{(i+1)}=x+d,S_i=x}{P(S_i=x)} $\\
+Donc $\frac{(n-i)(1-x-d)^{n-i-1}}{G(1-x)^{n-i}}=\frac{n-i}{G(1-x)}[\frac{1-x-d}{1-x}]^{n-i-1}$ x$\in$[0,1]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+On sait que l'ADN est découpé aléatoirement (shot gun) ce qui est comparable à découper un bâton aléatoirement en N morceaux. 
+On prend un "bâton" de taille 1 000 000 que l'on coupe en N morceaux aléatoirement. \\
+Soit N une variable aléatoire qui représente le nombre de fragments obtenus.
+Cette variable aléatoire dépend de la personne qui manipule. En effet, si la personne travaille soigneusement N devrait être petit comparée au N obtenus par une personne qui ne travaille pas soigneusement.\\
 
+On considère dans un premier temps que N suit une loi de poisson de probabilité : 
+$p_{H}(N=n) =\frac{\lambda^{n}e^{-\lambda}}{n!}$
+avec $\lambda >0 $ et N entier naturel.
+
+Soit $X_i$ avec i =1,2,... la taille des fragments obtenus 
+$X_i$ sont indépendantes et identiquement distribuées selon une distribution bêta de paramètres $\alpha = 1$ et $\beta=n$.
+$p_{H}(x) =n(1-x)^{n-1}$ avec $x\in[0,1]$\\
+$p_{H}(x) = \sum_{i=0}^{+\infty}n(1-x)^{n-1}\frac{\lambda^{n}e^{-\lambda}}{n!}$\\
+$p_{H}(x)= \lambda e^{-\lambda}\sum_{i=0}^{+\infty}\frac{(\lambda (1-x))^{n-1}}{(n-1)!}$ \\
+$p_{H}(x)= \lambda e^{-\lambda}\sum_{i=1}^{+\infty}\frac{(\lambda (1-x))^{n}}{(n)!} + \frac{\lambda^{2}e^{-\lambda}}{1-x}$ \\
+$p_{H}(x)= \lambda e^{-\lambda x} + \frac{\lambda^{2}e^{-\lambda}}{1-x}$ \\
+C'est la densité de la loi composée bêta avec la loi de poisson de paramètre$\lambda$. \\
+$p_{H}(x) = \sum_{n=0}^{+\infty}n(1-x)^{n-1}\frac{\lambda^{n}e^{-\lambda}}{n!} \\ p_{H}(x) = \sum_{n=1}^{+\infty}n(1-x)^{n-1}\frac{\lambda^{n}e^{-\lambda}}{n!} + 0 \\
+p_{H}(x) = \lambda e^{-\lambda}\sum_{k=0}^{+\infty}\frac{((1-x)\lambda)^{k}}{(k)!} \\
+p_{H}(x) = \lambda e^{-\lambda}e^{(1-x)\lambda} \\
+p_{H}(x) = \lambda e^{-\lambda x}
+$ \\
+On trace cette densité et on obtient le graphique suivant : \\
+\includegraphics[scale=0.5]{betapoiss.png}\\
+On remarque que la moyenne de la loi poisson $\lambda$ se retrouve pour x = 0. 
+\\On fait de même en composant la loi bêta avec la loi uniforme de paramètres : a, b \\
+$p_{H}(x) = \int_{a}^{b}n(1-x)^{n-1}\frac{1}{b-a}dn$\\
+On trouve : $ p_{H}(x)=\frac{e^{-ln(1-x)}}{b-a}(\frac{be^{bln(1-x)}-ae^{aln(1-x)}}{ln(1-x)}+ \frac{e^{aln(1-x)}-e^{bln(1-x)}}{(ln(1-x))^2})$\\
+
+Pour la loi bêta-normale, $p_{H}(x) = \int_{0}^{+\infty}n(1-x)^{n-1}\frac{e^{\frac{-(n-\mu)^2}{2\sigma^2}}}{\sigma\sqrt{2\pi}}dn$
+$p_{H}(x)=\frac{k1k2\sigma^2}{sqrt{2\pi}}(ln(1-x)+\frac{\mu}{\sigma^2})(1-x)^{\mu^2 - 1}e^{\frac{\sigmaln(1-x)}{sqrt(2}}(1-erf(\frac{-b}{2sqrt{a}})-\frac{k1\sigma}{(1-x)sqrt{2\pi}}$
 \section{Conclusion - Perspectives} 
 lander-watermann
 \newpage
