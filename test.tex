@@ -1,0 +1,248 @@
+\documentclass[11pt,a4paper]{article} % Format de page
+\usepackage[utf8x]{inputenc} % Pour les caractères accentués
+\usepackage[T1]{fontenc} % Encodage de caractères
+\usepackage{aeguill} % moins flou que la police vectorielle Latin Modern
+\usepackage[frenchb]{babel} % Règles typographiques françaises
+\usepackage{graphicx} % Insérer des images
+\usepackage{hyperref} % Créer des liens et des signets
+\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm]{geometry}
+
+\hypersetup{
+colorlinks=true, %colorise les liens
+breaklinks=true, %permet le retour à la ligne dans les liens trop longs
+urlcolor= blue, %couleur des hyperliens
+linkcolor= black, %couleur des liens internes
+citecolor=black, %couleur des références
+pdftitle={Rapport de stage}, %informations apparaissant dans
+pdfauthor={Anonyme}, %les informations du document
+pdfsubject={Simulation} %sous Acrobat.
+}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{1ex plus 0.5ex minus 0.2ex}
+\newcommand{\hsp}{\hspace{20pt}}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+\begin{document}
+
+\begin{titlepage}
+  \begin{sffamily}
+  \begin{center}
+
+    % Upper part of the page. The '~' is needed because \\
+    % only works if a paragraph has started.
+    \includegraphics[scale=0.15]{INRA_logo.jpg}~\\[1.5cm]
+
+    \textsc{\LARGE Rapport de stage}\\[1cm]
+
+    \textsc{\Large Institut national de la recherche agronomique (INRA)}\\
+	\textsc{ Jouy-en-Josas}\\[1cm]
+    % Title
+    \HRule \\[0.4cm]
+    {\LARGE \bfseries Étude de la distribution des longueurs des lectures  produites par les technologies de séquençage de 3\ieme{} génération\\[0.4cm] }
+	
+    \HRule \\[2cm]
+    
+        
+       
+
+    									
+    
+
+    % Author and supervisor
+    
+      {\large Amina Ghoul}
+      \hspace{3cm}
+      {\large Encadrant : M. Jean-François Gibrat}\\[1cm]
+       
+      
+
+   
+
+    % Bottom of the page
+    {\large 1\ier{} Avril 2019 — 15 Juillet 2019}\\[1cm]
+	\includegraphics[scale=0.25]{PS.png}
+     \hspace{4cm}
+    \includegraphics[scale=0.2]{Logo_UEVE_2011.png} \\[2cm]
+  \end{center}
+  \end{sffamily}
+\end{titlepage}
+ 
+     
+     
+% Table des matières
+\newpage
+\section*{Remerciements}
+\vspace{2cm}
+
+Avant tout développement sur cette expérience professionnelle, il apparaît opportun de commencer ce rapport de stage par des remerciements, à ceux qui m’ont beaucoup appris au cours de ce stage, et même à ceux qui ont eu la gentillesse de faire de ce stage un moment très profitable.\\
+
+Aussi, je remercie Monsieur Jean-François Gibrat, mon maître de stage qui m’a formé et accompagné tout au long de cette expérience professionnelle avec beaucoup de patience et de pédagogie. Enfin, je remercie l’ensemble des employés de l'INRA (Institut national de la recherche agronomique) pour les conseils qu’ils ont pu me prodiguer au cours de ce stage.
+\newpage
+\tableofcontents
+\newpage
+\section{Introduction}
+\vspace{2cm}
+Dans le cadre de mon master 1 mathématiques et interaction de l'université d'Evry-Val-d'Essonne, j'ai effectué mon stage pendant 3 mois et demi à l'Institut national de la recherche agronomique (INRA) situé à Jouy-en-Josas.\\
+Le  sujet du stage concerne l'étude de la distribution des longueurs des lectures produites par les technologies de séquençage de 3\ieme{} génération. \\
+Les lectures (en anglais reads) correspondent aux fragments d'ADN obtenus après séquençage de celui-ci.\\
+Contrairement aux précédentes générations qui fournissent des lectures de longueur constante et petite (d'au plus 400 paire de bases (bp)), les technologies de troisième
+génération produisent quant à eux, une distribution de longueurs avec une médiane 
+d'environ 12 kbp (kilo paire de bases) et une queue de distribution qui peut aller jusqu'à 60 kbp pour les lectures les plus longues. \\[0.5cm]
+Ainsi, l'objectif ce stage est de trouver une expression analytique de la distribution des longueurs des lectures issues du séquençage de troisième génération. \\[0.5cm]
+Dans un premier temps, il s'agira de présenter l'INRA ainsi que l'équipe au sein de laquelle j'ai effectué mon stage. Ensuite, je décrirai les missions et les activités réalisées lors de ce stage. Enfin,  j'évoquerai les apports et le bilan retenus du stage.
+
+\newpage
+\section{Contexte du stage} 
+
+
+Mon stage a été réalisé à l'INRA (Institut national de la recherche agronomique) dans l'unité de recherche "Mathématiques et Informatique Appliquées du Génome à l'Environnement" (MaIAGE), dans l'équipe StatInfOmics (Statistique et Bioinformatique des données Omiques).\\
+Cet institut, fondé en 1946, est un organisme français de recherche en agronomie ayant le statut d’Établissement public à caractère scientifique et technologique, et sous la double tutelle du ministère chargé de la Recherche et du ministère chargé de l’Agriculture. Il est le premier institut de recherche agronomique en Europe avec 8417 chercheurs, ingénieurs et techniciens, et deuxième dans le monde en nombre de publications en sciences agricoles et en sciences de la plante et de l'animal. L'INRA contribue à la production de connaissances et à l'innovation dans l'alimentation, l'agriculture et l'environnement. Il est composé de plus de 200 unités de recherche implantées dans 17 centres en région. L'ambition de l'INRA est, dans une perspective mondiale, de contribuer à assurer une alimentation saine et de qualité, une agriculture compétitive et durable ainsi qu'un environnement préservé et valorisé.\\
+J'ai effectué mon stage dans le centre Ile-de-France-Jouy-en-Josas qui comprend 29 unités dont l'unité MaIAGE. L'unité de recherche MaIAGE regroupe des mathématiciens, des informaticiens, des bioinformaticiens et des biologistes autour de questions de biologie et agro-écologie, allant de l'échelle moléculaire à l'échelle du paysage en passant par l'étude de l'individu, de populations ou d'écosystèmes.\\
+L'unité développe des méthodes mathématiques et informatiques originales de portée générique ou motivées par des problèmes biologiques précis. Elle s'implique aussi dans la mise à disposition de bases de données et de logiciels permettant aux biologistes d'utiliser les outils dans de bonnes conditions ou d'exploiter automatiquement la littérature scientifique. \\
+L'inférence statistique et la modélisation dynamique sont des compétences fortes de l'unité, auxquelles s'ajoutent la bioinformatique, l'automatique et l'algorithmique. Les activités de recherche et d'ingénierie s'appuient également sur une forte implication dans les disciplines destinatrices : écologie, environnement, biologie moléculaire et biologie des systèmes.\\
+
+\newpage
+\section{Objectifs de l'équipe} 
+J'ai effectué mon stage dans l'équipe StatInfOmics: Statistique et Bioinformatique des données Omiques.\\
+Cette équipe de l'unité MaIAGE, vise à développer et mettre en oeuvre des méthodes statistiques et bioinformatiques dédiées à l’analyse de données “omiques”. D’un point de vue biologique, les questions abordées concernent principalement l’annotation structurale et fonctionnelle des génomes, les régulations géniques, la dynamique évolutive des génomes, et la caractérisation d’écosystèmes microbiens en terme de diversité et de fonctions présentes ; une cible commune étant la relation entre génotype et phénotype. Une part de plus en plus importante de l'activité de cette équipe est relative à l’intégration de données “omiques” hétérogènes pour en extraire de l’information pertinente et aussi prédire des processus biologiques.\\
+D’un point de vue méthodologique, les travaux de cette équipe sont essentiellement d’ordre statistique : estimation de distributions, inférence de modèles à variables latentes, prédiction de relations entre jeux de variables, segmentation, visualisation et classification, avec une attention particulière au cadre de la grande dimension qui caractérise la majorité des jeux de données “omiques” étudiés. Ces recherches s’appuient souvent sur une ingénierie bioinformatique très forte.
+\newpage
+
+
+\section{Missions effectuées} 
+Afin de répondre à l'objectif du stage qui est de trouver une expression analytique de la distribution des longueurs des lectures produites par le séquençage de troisième génération.\\
+J'ai effectué plusieurs missions :\\
+Dans un premier temps, j'ai du me familiariser avec certaines notions concernant le séquençage, que je ne connaissais pas. Ensuite, j'ai du essayer de modéliser la distribution de manière empirique, en utilisant le langage python. Enfin, il a fallu trouver une expression mathématique de cette distribution.\subsection{Le séquençage de l'ADN}
+Ma première mission a été de comprendre le séquençage de l'ADN et plus particulièrement,le fonctionnement des séquenceurs de troisième génération suivant : Pacific Biosciences (Pacbio) et Oxford Nanopore (Minion).\\
+D'une part, la société Pacific Biosciences (Pacbio) a développé une méthode permettant de séquencer des fragments d'ADN de très grande taille (jusqu'à 2500 nucléotides) à partir d'une seule molécule d'ADN. Une enzyme responsable de l'élongation de l'ADN est fixée au fond d'un puits. En présence d'une molécule d'ADN simple brin, celle-ci va être capable d'incorporer des nucléotides libres complémentaires au brin à analyser, un par un. Les nucléotides ont la particularité d'être marqués par une molécule fluorescente différente (bleu pour G, jaune pour A, vert pour T et rouge pour G). Lorsque l'enzyme incorpore un nouveau nucléotide, elle va libérer le marqueur fluorescent et générer un signal lumineux qui sera lu, ce qui permettra de déterminer les nucléotides d'ADN.   (cf annexe 1)
+\\
+D'autre part, la société Oxford Nanopore (Minion), quant à elle, utilise le séquençage par nanopore biologique. L’ADN à séquencer est capté par une enzyme (hélicase ou ADN polymérase, en bleu) qui extrude l’ADN simple brin à une vitesse réduite. Le nanopore lui-même (en rouge) constitue une ouverture dans la membrane lipidique (en vert) dans laquelle le champ électrique (flèches bleues) force le passage de l’ADN simple brin (en marron). Ce dernier est ralenti au passage par la constriction du nanopore (encart du bas) et permet l’identification des bases individuelles par mesure de l’intensité du courant électrique traversant le pore à un instant donné (encart du haut). Le trait pointillé bleu représente le courant à vide du nanopore. (cf annexe 2) \\
+En effet, il m'était nécessaire de comprendre ces notions afin de pouvoir entamer ce stage et répondre à la problématique posée.  Pour ce faire, j'ai suivi une partie d'une formation sur le séquençage enseigné par mon tuteur de stage. J'ai également utilisé Internet pour me renseigner sur ce sujet. De plus, j'ai eu l'occasion de rencontrer des biologistes du CNRS(Centre national de la recherche scientifique) qui utilisent le séquenceur Minion, et d'avoir une conversation téléphonique avec une biologiste de l'INRA de Toulouse qui utilise le séquenceur Pacbio. Par conséquent, j'ai appris, entre autres, que lors du séquençage de l'ADN, le brin d'ADN est d'abord fragmenté aléatoirement par un biologiste. Les fragments obtenus sont alors introduits dans le séquenceur (Minion ou Pacbio), et ce qui nous a intéressé lors de ce stage est la distribution des longueurs des fragments récupérés à la sortie du séquenceur. D'après les biologistes rencontrés, les séquenceurs ont des spécificités. En effet, le Minion et le Pacbio semblent couper certains fragments. (image étape séquençage)
+
+\subsection{Simulation du séquençage}
+
+Lors du séquençage, l'ADN est fragmenté aléatoirement en N morceaux, ce qui est semblable au cas d'un bâton coupé en N morceaux aléatoirement. Ainsi, on sait que la loi suivie par la distribution des longueurs des morceaux est une loi bêta de paramètres $\alpha=1$ et $\beta = N$. \\
+Or, dans notre cas, N est également une variable aléatoire suivant une loi à déterminer.
+En effet, le nombre de morceaux obtenus varie en fonction de la personne qui manipule. C'est à dire que si celle-ci travaille soigneusement, le nombre N obtenu est inférieur à celui obtenu par une personne qui ne manipule pas soigneusement. \\
+Ainsi, nous avons pensé tout d'abord à la loi normale de paramètres $\mu$ >0 et $\sigma^2$ >0. Si $\mu$ et $\sigma^2$ sont petits, cela veut dire que la personne chargée de fragmenter l'ADN, travaille soigneusement, et inversement. \\
+Ensuite, nous avons considéré la loi de poisson de paramètre $\lambda$ >0. Même si cette loi caractérise les évènements rares, cette loi est néanmoins plus facile à intégrer et peut être approchée par la loi normale pour $\lambda>25$, ce qui est notre cas ici. \\
+Enfin, nous avons choisi la loi uniforme de paramètres a>0 et b>0. En effet, on peut considérer que le nombre de fragment ..  \\
+Ainsi, ma deuxième mission a été de simuler par ordinateur le séquençage d'un brin d'ADN et d'observer la distribution des longueurs des lectures obtenue.\\
+Pour ce faire , j'ai considéré un brin d'ADN comme un bâton que l'on coupe aléatoirement en N morceaux, où N suit soit une loi de poisson, une loi uniforme ou une loi normale. Ensuite ces morceaux sont découpés aléatoirement par le séquenceur.\\
+J'ai d'abord considéré que les séquenceurs découpent les fragments indépendamment de leur taille avec une probabilité très faible. On trouve alors 
+Le but de cette simulation est de comparer la distribution obtenue par simulation et la distribution des longueurs des lectures issue de données expérimentales afin d'avoir une idée de la loi appropriée pour N.\\
+Les données expérimentales proviennent du site E.N.A (European Nucleotide Archive). Je ne me suis intéressée qu'aux données de bactéries dont l'ADN a été séquencé par le Minion ou le Pacbio. \\
+J'ai utilisé le langage python (le package numpy, random) pour réaliser cette simulation (cf annexe 3). On trouve des résultats similaires pour les trois lois de N. \\
+\subsection{Formule théorique}
+La mission suivante a été d'obtenir une formule explicite de la loi composée de la loi bêta et de la loi de N. \\
+Ainsi, la distribution des longueurs des fragments qui nous intéresse est une loi composée, dont la formule est : \\
+$p_{H}(x) = \int_{}^{}p_{F}(x|n)p_{G}(n)dn$ où \\
+$p_{H}$ : densité de la loi composée, $p_{F}$ : densité de la loi de N, $p_{G}$ : densité de la loi bêta de paramètres $\alpha = 1$ et $\beta=n$. \\ 
+Avec $p_{G}(x) = \frac{\Gamma(1+n)}{\Gamma(1)\Gamma(n)}x^0(1-x)^{n-1}$ pour $x\in[0,1]$\\
+$ p_{G}(x) = \frac{n!}{(n-1)!}(1-x)^{n-1}$ \\
+$ p_{G}(x) = n(1-x)^{n-1}$ \\
+où $\Gamma$ est la fonction Gamma et x = $\frac{y}{g}$ avec y : la taille des fragments (en bp) et g : la taille du génome (en bp).\\
+On considère dans un premier temps le cas où N suit une loi de poisson de paramètre $\lambda$ et de densité de probabilité : $p_{F}(N=n) =\frac{\lambda^{n}e^{-\lambda}}{n!}$ \\
+avec $\lambda >0 $ et n est un entier naturel. \\
+On calcule alors la loi composée bêta-poisson $p_{H}$.\\
+$p_{H}(x) = \sum_{i=0}^{+\infty}n(1-x)^{n-1}\frac{\lambda^{n}e^{-\lambda}}{n!}$\\
+$p_{H}(x)= \lambda e^{-\lambda}\sum_{i=0}^{+\infty}\frac{(\lambda (1-x))^{n-1}}{(n-1)!}$ \\
+$p_{H}(x)= \lambda e^{-\lambda}\sum_{i=1}^{+\infty}\frac{(\lambda (1-x))^{n}}{(n)!} + \frac{\lambda^{2}e^{-\lambda}}{1-x}$ \\
+$p_{H}(x)= \lambda e^{-\lambda x} + \frac{\lambda^{2}e^{-\lambda}}{1-x}$ \\
+$p_{H}(x) = \sum_{n=0}^{+\infty}n(1-x)^{n-1}\frac{\lambda^{n}e^{-\lambda}}{n!} \\ p_{H}(x) = \sum_{n=1}^{+\infty}n(1-x)^{n-1}\frac{\lambda^{n}e^{-\lambda}}{n!} + 0 \\
+p_{H}(x) = \lambda e^{-\lambda}\sum_{k=0}^{+\infty}\frac{((1-x)\lambda)^{k}}{(k)!} \\
+p_{H}(x) = \lambda e^{-\lambda}e^{(1-x)\lambda}$ \\
+Finalement, on trouve : \\
+$p_{H}(x) = \lambda e^{-\lambda x}$ \\
+On reconnait la densité de la loi exponentielle de paramètres $\lambda > 0$. \\
+On fait de même en composant la loi bêta avec la loi uniforme de paramètres : a, b \\
+$p_{H}(x) = \int_{a}^{b}n(1-x)^{n-1}\frac{1}{b-a}dn$\\
+On trouve : $ p_{H}(x)=\frac{e^{-ln(1-x)}}{b-a}(\frac{be^{bln(1-x)}-ae^{aln(1-x)}}{ln(1-x)}+ \frac{e^{aln(1-x)}-e^{bln(1-x)}}{(ln(1-x))^2})$\\
+Cette densité n'est pas défini pour x = 0 ni pour x = 1, ce qui est cohérent. \\
+En effet, on peut supposer que l'ADN à séquencer (de taille g), ne peut pas être fragmenté en morceaux de taille 0 (i.e x =0), ni en morceaux de taille g (i.e x=1). \\ 
+Enfin, pour N suivant la loi normale de paramètres $\mu$ et $\sigma^2$, on a : \\
+$p_{H}(x) = \int_{0}^{+\infty}n(1-x)^{n-1}\frac{1}{\sigma\sqrt{2\pi}}e^{\frac{-(n-\mu)^2}{2\sigma^2}}dn$ \\
+$p_{H}(x)=\frac{k1k2\sigma^2}{sqrt{2\pi}}(ln(1-x)+\frac{\mu}{\sigma^2})(1-x)^{\mu^2 - 1}e^{\frac{\sigma ln(1-x)}{sqrt(2}}(1-erf(\frac{-b}{2sqrt{a}})-\frac{k1\sigma}{(1-x)sqrt{2\pi}}$ \\
+On remarque que pour les trois lois composées obtenues, l'allure de cette densité est semblable à celle de la densité de la loi bêta. \\
+En outre, on observe que les espérances des lois de N se retrouvent graphiquement lorsque x tend vers 0.\\
+Par exemple, E(N)= $\lambda$, lorsque N suit une loi de poisson et lorsque x tend vers 0, $p_{H}(x)= \lambda$. \\
+Après avoir déterminé la loi composée de bêta avec la loi de N, la mission suivante a été de trouver une loi $f$ permettant de modéliser la distribution des longueurs des lectures, lorsque celles-ci passent dans le séquenceur. \\
+En effet, comme mentionner précédemment, les séquenceurs Minion et Pacbio semblent couper certains fragments d'ADN pendant le séquençage, d'après les biologistes que nous avons rencontrés.\\
+Ainsi, la loi géométrique nous a semblé approprié pour décrire la distribution des longueurs des fragments fourni par le séquenceur. 
+En effet, le séquenceur a une probabilité p (ici très faible) de couper un fragment.
+Cette probabilité est indépendante de la longueur du fragment introduit dans le séquenceur. \\
+$f(x) = p(1-p)^{x-1}$ où x représente la longueur d'un fragment (en bp) \\
+Ainsi, on calcule la fonction G décrivant la distribution des longueurs des fragments en prenant en considération la particularité du séquenceur. \\
+On intègre la fonction $p_H(l)$ entre x et G car \\
+$G(x)=f(x)*\int_{x}^{g}p_H(l)dl$ \\
+$G(x)=p(1-p)^{x-1}( e^{-\lambda x}- e^{-\lambda g})$ avec g : taille du génome.\\
+Étant donné que la fonction composée bêta-poisson a une expression plus simple que les autres fonctions composées calculées précédemment, et que leurs représentations sont similaires, pour simplifier les calculs, nous avons décidé de considérer $p_H(x) = \lambda*e^{-\lambda x}$ \\
+En représentant graphiquement cette fonction G, on a remarqué que l'on obtient une courbe de même allure que la distribution des longueurs des fragments pour l'ADN séquencé avec le Minion.\\
+Dans le cas du séquençage effectué à l'aide du Pacbio, en revanche, ce n'est pas le cas. Il nous a semblé alors, que la probabilité de couper le fragment introduit dépend de la longueur de celui-ci : plus le fragment est long et plus le séquenceur à de chances de le couper. On a alors modélisé ce cas en utilisant la loi de Weibull.\\
+$f(x) = \frac{k}{\alpha} (\frac{x}{\alpha})^{k-1}e^{-(\frac{x}{\alpha})^k}$ \\
+où k>0 et $\alpha>0$\\
+On posera $\mu = \frac{1}{\alpha}$\\
+Cette loi est utilisée généralement lorsque le taux de défaillance évolue comme une puissance du temps.\\ Dans notre cas : le taux de défaillance correspond au taux de coupe par le séquenceur, et cette loi est en fonction de la taille en bp et non du temps. De plus, le paramètre k est supérieur à 1, c'est-à-dire que le taux de coupe croît avec la taille. \\
+La fonction G vaut alors :  \\
+$G(x)=f(x)*\int_{x}^{G}p_H(l)dl$ \\
+$G(x)= k \mu (x \mu)^{k-1}e^{-(x \mu)^k}( e^{-\lambda x}- e^{-\lambda g})$ \\
+
+
+Pour Minion, nous avons $G(x)= p(1-p)^{x-1} (e^{-\lambda G}-e^{-\lambda x}) $ \\
+On optimise les paramètres en utilisant le maximum de vraisemblance.
+Pour pacbio, $G(x)=\frac{k}{\alpha} (\frac{x}{\alpha})^{k-1}e^{-(\frac{x}{\alpha})^k} (e^{-\lambda G}-e^{-\lambda x})$
+
+\section{Apport et bilan du stage} 
+
+
+
+On sait que cette distribution de tailles suit une loi de bêta de paramètres 1 et n.
+On peut le montrer théoriquement. \\
+On s'intéresse au positionnement de lecture $S_{i}$ sur un génome de taille G. $S_{i}$ : position de départ de la $i_{ème}$ lecture sur le génome.\\
+Les lectures sont générées aléatoirement et uniformément le long du génome.
+Soit $D_{i}$= $S_{i+1}$-$S_{i}$ la distance entre 2 positions de départ consécutives.
+On s'intéresse aux statistiques d'ordre.\\
+Soit X une variable aléatoire continue et $X_{1}$, $X_{2}$, ... $X_{n}$ des variables aléatoires indépendantes et identiquement distribuées selon la distribution de X.
+On définit $X_{1}$ comme la plus petite des $X_{i}$ précédentes pour i allant de 1 à n.\\
+$X_{2}$ : la seconde plus petite des $X_{i}$ précédentes.\\
+On a donc $X_{1}$ est le minimum des $X_{i}$ et $X_{n}$ le maximum des $X_{i}$.
+On s'intéresse à l'évènement u<$X_{i}$<u+h\\
+Cet évènement correspond à l'évènement que i-1 variable aléatoire ont une valeur inférieur à u, 1 variable aléatoire à une valeur dans [u, u+h] et n-i variables aléatoires ont une valeur supérieure à u+h.\\
+La probabilité de cet évènement est une multinomiale où n essais sont distribués dans k=3 catégories avec les probabilités correspondantes.\\
+P(u<$X_{i}$<u+h) = $\frac{n!}{(i-1)!(n-i)!} F_X(u)^{i-1}f_X(u)h[1-F_X(u+h)]^{n-i}$\\
+où $F_X $: la fonction de répartition de X
+et $f_X $: la fonction densité de X.\\
+On a par ailleurs supposé que P(u<$X_{i}$<u+h)$\approx f_X(u)h$ quand h est petit.
+Donc la densité de probabilité correspondante est :\\
+$f_{X(i)}(x) = \frac{n!}{(i-1)!(n-i)!} F_X(u)^{i-1}f_X(u)h[1-F_X(u+h)]^{n-i}$\\
+Si X est distribuée de façon uniforme sur (1-G) on a :
+$f_X(x)=\frac{1}{G}$  $F_X(x)=\frac{x}{G}$\\
+Dans ce cas : 
+$f_{X(i)}(x) = \frac{n!}{(i-1)!(n-i)!} (\frac{x}{G})^{i-1} \frac{1}{G} [1-\frac{x}{G}]^{n-i}$ avec x $ \in $[0,L]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+\\Si on pose $ \frac{x}{G}$, $\alpha=i$, $\beta=n-i+1$, y$\in$[0,1]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    \\ 
+$f_{X(i)}(x)= \frac{(\alpha+\beta-1)!}{G(\alpha-1)!(\beta-1)!}y^{\alpha-1}(1-y)^{\beta-1}=\frac{1}{G}beta(i,n-i+1) $\\
+On considère la densité de probabilité jointe pour $S_(i)$ et $S_{(i+1)}$\\
+$f_{X(i)X(i+1)}(x,y) = \frac{n!}{(i-1)!(n-i-1)!} (\frac{x}{G})^{i-1} \frac{1}{G} \frac{1}{G}[1-\frac{y}{G}]^{n-i-1}$ y>x\\
+L'évènement $D_i$=d est le même que $S_{(i+1)}=x+d sachant que S(i)=x$
+P($D_i$=d)=P($S_{(i+1)}=x+d|S_i=x $)=$\frac{P(S_{(i+1)}=x+d,S_i=x}{P(S_i=x)} $\\
+Donc $\frac{(n-i)(1-x-d)^{n-i-1}}{G(1-x)^{n-i}}=\frac{n-i}{G(1-x)}[\frac{1-x-d}{1-x}]^{n-i-1}$ x$\in$[0,1]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+On sait que l'ADN est découpé aléatoirement (shot gun) ce qui est comparable à découper un bâton aléatoirement en N morceaux.  \\
+
+
+
+
+
+
+
+
+
+\section{Conclusion - Perspectives} 
+lander-watermann
+\newpage     
+\listoffigures
+\newpage
+\newpage
+\bibliographystyle{plain-fr}
+\nocite{*}
+\bibliography{rapport}
+\end{document} 
