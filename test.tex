@@ -6,7 +6,9 @@
 \usepackage{graphicx} % Insérer des images
 \usepackage{hyperref} % Créer des liens et des signets
 \usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm]{geometry}
-
+\usepackage{tocloft}
+\usepackage[nottoc]{tocbibind}
+\usepackage{appendix}
 \hypersetup{
 colorlinks=true, %colorise les liens
 breaklinks=true, %permet le retour à la ligne dans les liens trop longs
@@ -22,7 +24,13 @@ pdfsubject={Simulation} %sous Acrobat.
 \newcommand{\hsp}{\hspace{20pt}}
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 
+\renewcommand*{\cftfigname}{\figurename\space}
+\renewcommand*{\cftfigaftersnum}{~\textendash\hfill}
+\renewcommand{\cftfigpresnum}{\cftfigname}
+\setlength{\cftfigindent}{0pt}
+
 \begin{document}
+
 
 \begin{titlepage}
   \begin{sffamily}
@@ -114,90 +122,344 @@ Afin de répondre à l'objectif du stage qui est de trouver une expression analy
 J'ai effectué plusieurs missions :\\
 Dans un premier temps, j'ai du me familiariser avec certaines notions concernant le séquençage, que je ne connaissais pas. Ensuite, j'ai du essayer de modéliser la distribution de manière empirique, en utilisant le langage python. Enfin, il a fallu trouver une expression mathématique de cette distribution.\subsection{Le séquençage de l'ADN}
 Ma première mission a été de comprendre le séquençage de l'ADN et plus particulièrement,le fonctionnement des séquenceurs de troisième génération suivant : Pacific Biosciences (Pacbio) et Oxford Nanopore (Minion).\\
-D'une part, la société Pacific Biosciences (Pacbio) a développé une méthode permettant de séquencer des fragments d'ADN de très grande taille (jusqu'à 2500 nucléotides) à partir d'une seule molécule d'ADN. Une enzyme responsable de l'élongation de l'ADN est fixée au fond d'un puits. En présence d'une molécule d'ADN simple brin, celle-ci va être capable d'incorporer des nucléotides libres complémentaires au brin à analyser, un par un. Les nucléotides ont la particularité d'être marqués par une molécule fluorescente différente (bleu pour G, jaune pour A, vert pour T et rouge pour G). Lorsque l'enzyme incorpore un nouveau nucléotide, elle va libérer le marqueur fluorescent et générer un signal lumineux qui sera lu, ce qui permettra de déterminer les nucléotides d'ADN.   (cf annexe 1)
-\\
-D'autre part, la société Oxford Nanopore (Minion), quant à elle, utilise le séquençage par nanopore biologique. L’ADN à séquencer est capté par une enzyme (hélicase ou ADN polymérase, en bleu) qui extrude l’ADN simple brin à une vitesse réduite. Le nanopore lui-même (en rouge) constitue une ouverture dans la membrane lipidique (en vert) dans laquelle le champ électrique (flèches bleues) force le passage de l’ADN simple brin (en marron). Ce dernier est ralenti au passage par la constriction du nanopore (encart du bas) et permet l’identification des bases individuelles par mesure de l’intensité du courant électrique traversant le pore à un instant donné (encart du haut). Le trait pointillé bleu représente le courant à vide du nanopore. (cf annexe 2) \\
-En effet, il m'était nécessaire de comprendre ces notions afin de pouvoir entamer ce stage et répondre à la problématique posée.  Pour ce faire, j'ai suivi une partie d'une formation sur le séquençage enseigné par mon tuteur de stage. J'ai également utilisé Internet pour me renseigner sur ce sujet. De plus, j'ai eu l'occasion de rencontrer des biologistes du CNRS(Centre national de la recherche scientifique) qui utilisent le séquenceur Minion, et d'avoir une conversation téléphonique avec une biologiste de l'INRA de Toulouse qui utilise le séquenceur Pacbio. Par conséquent, j'ai appris, entre autres, que lors du séquençage de l'ADN, le brin d'ADN est d'abord fragmenté aléatoirement par un biologiste. Les fragments obtenus sont alors introduits dans le séquenceur (Minion ou Pacbio), et ce qui nous a intéressé lors de ce stage est la distribution des longueurs des fragments récupérés à la sortie du séquenceur. D'après les biologistes rencontrés, les séquenceurs ont des spécificités. En effet, le Minion et le Pacbio semblent couper certains fragments. (image étape séquençage)
+D'une part, la société Pacific Biosciences (Pacbio) a développé une méthode permettant de séquencer des fragments d'ADN de très grande taille (jusqu'à 2500 nucléotides) à partir d'une seule molécule d'ADN. Une enzyme responsable de l'élongation de l'ADN est fixée au fond d'un puits. En présence d'une molécule d'ADN simple brin, celle-ci va être capable d'incorporer des nucléotides libres complémentaires au brin à analyser, un par un. Les nucléotides ont la particularité d'être marqués par une molécule fluorescente différente (bleu pour G, jaune pour A, vert pour T et rouge pour G). Lorsque l'enzyme incorpore un nouveau nucléotide, elle va libérer le marqueur fluorescent et générer un signal lumineux qui sera lu, ce qui permettra de déterminer les nucléotides d'ADN. \\
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.5]{pacbio.jpg}
+  \caption{\small Fonctionnement du Pacbio}
+\end{figure} \\
+D'autre part, la société Oxford Nanopore (Minion), quant à elle, utilise le séquençage par nanopore biologique. L’ADN à séquencer est capté par une enzyme (hélicase ou ADN polymérase, en bleu) qui extrude l’ADN simple brin à une vitesse réduite. Le nanopore lui-même (en rouge) constitue une ouverture dans la membrane lipidique (en vert) dans laquelle le champ électrique (flèches bleues) force le passage de l’ADN simple brin (en marron). Ce dernier est ralenti au passage par la constriction du nanopore (encart du bas) et permet l’identification des bases individuelles par mesure de l’intensité du courant électrique traversant le pore à un instant donné (encart du haut). Le trait pointillé bleu représente le courant à vide du nanopore. \\
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.8]{minion.jpg}
+  \caption{\small Fonctionnement du Minion}
+\end{figure} 
+En effet, il m'était nécessaire de comprendre ces notions afin de pouvoir entamer ce stage et répondre à la problématique posée.\\
+Au début, il était difficile pour moi de me familiariser avec ces nouvelles notions.
+Ainsi, j'ai suivi une partie d'une formation sur le séquençage enseigné par mon tuteur de stage. J'ai également utilisé Internet pour me renseigner sur ce sujet. De plus, j'ai eu l'occasion de rencontrer des biologistes du CNRS(Centre national de la recherche scientifique) qui utilisent le séquenceur Minion, et d'avoir une conversation téléphonique avec une biologiste de l'INRA de Toulouse qui utilise le séquenceur Pacbio.\\
+Par conséquent, j'ai appris, entre autres, que lors du séquençage de l'ADN, le brin d'ADN est d'abord fragmenté aléatoirement par un biologiste. Les fragments obtenus sont alors introduits dans le séquenceur (Minion ou Pacbio), et ce qui nous a intéressé lors de ce stage est la distribution des longueurs des fragments récupérés à la sortie du séquenceur. \\
+D'après les biologistes rencontrés, les séquenceurs ont des spécificités. En effet, d'après leurs observations, le Minion et le Pacbio semblent couper certains fragments aléatoirement. De plus, avant d'introduire les fragments dans le Pacbio, les biologistes décident de séquencer seulement les fragments ayant une taille supérieure à une taille donnée.  \\
 
 \subsection{Simulation du séquençage}
 
-Lors du séquençage, l'ADN est fragmenté aléatoirement en N morceaux, ce qui est semblable au cas d'un bâton coupé en N morceaux aléatoirement. Ainsi, on sait que la loi suivie par la distribution des longueurs des morceaux est une loi bêta de paramètres $\alpha=1$ et $\beta = N$. \\
-Or, dans notre cas, N est également une variable aléatoire suivant une loi à déterminer.
-En effet, le nombre de morceaux obtenus varie en fonction de la personne qui manipule. C'est à dire que si celle-ci travaille soigneusement, le nombre N obtenu est inférieur à celui obtenu par une personne qui ne manipule pas soigneusement. \\
+Avant d'être séquencé, l'ADN est fragmenté aléatoirement en N morceaux, ce qui est semblable au cas d'un bâton coupé en N morceaux aléatoirement.\\
+Ainsi, on sait que la loi suivie par la distribution des longueurs des morceaux est une loi bêta de paramètres $\alpha=1$ et $\beta = N$. \\
+Or, dans notre cas, N est également une variable aléatoire suivant une loi à déterminer.\\
+En effet, le nombre de morceaux obtenus N varie en fonction de la personne qui manipule. C'est à dire que si celle-ci travaille soigneusement, le nombre N obtenu est inférieur à celui obtenu par une personne qui ne manipule pas soigneusement. \\
 Ainsi, nous avons pensé tout d'abord à la loi normale de paramètres $\mu$ >0 et $\sigma^2$ >0. Si $\mu$ et $\sigma^2$ sont petits, cela veut dire que la personne chargée de fragmenter l'ADN, travaille soigneusement, et inversement. \\
 Ensuite, nous avons considéré la loi de poisson de paramètre $\lambda$ >0. Même si cette loi caractérise les évènements rares, cette loi est néanmoins plus facile à intégrer et peut être approchée par la loi normale pour $\lambda>25$, ce qui est notre cas ici. \\
-Enfin, nous avons choisi la loi uniforme de paramètres a>0 et b>0. En effet, on peut considérer que le nombre de fragment ..  \\
-Ainsi, ma deuxième mission a été de simuler par ordinateur le séquençage d'un brin d'ADN et d'observer la distribution des longueurs des lectures obtenue.\\
-Pour ce faire , j'ai considéré un brin d'ADN comme un bâton que l'on coupe aléatoirement en N morceaux, où N suit soit une loi de poisson, une loi uniforme ou une loi normale. Ensuite ces morceaux sont découpés aléatoirement par le séquenceur.\\
-J'ai d'abord considéré que les séquenceurs découpent les fragments indépendamment de leur taille avec une probabilité très faible. On trouve alors 
-Le but de cette simulation est de comparer la distribution obtenue par simulation et la distribution des longueurs des lectures issue de données expérimentales afin d'avoir une idée de la loi appropriée pour N.\\
+Enfin, nous avons choisi la loi uniforme de paramètres a>0 et b>0. En effet, on peut considérer que le nombre de fragment est distribué de manière uniforme.  \\
+Ainsi, ma deuxième mission a été de simuler par ordinateur le séquençage d'un brin d'ADN et d'observer la distribution des longueurs des lectures obtenue. J'ai utilisé le langage python (le package numpy, random) pour réaliser cette simulation.\\
+Le but de cette simulation est de comparer la distribution obtenue par simulation et la distribution des longueurs des lectures issue de données expérimentales afin d'avoir une idée de la loi appropriée pour N et de l'influence du séquenceur sur la distribution. \\
 Les données expérimentales proviennent du site E.N.A (European Nucleotide Archive). Je ne me suis intéressée qu'aux données de bactéries dont l'ADN a été séquencé par le Minion ou le Pacbio. \\
-J'ai utilisé le langage python (le package numpy, random) pour réaliser cette simulation (cf annexe 3). On trouve des résultats similaires pour les trois lois de N. \\
+\subsubsection{Minion}
+
+J'ai d'abord représenté la distribution des longueurs des lectures (en bp) après séquençage de l'ADN de deux bactéries avec le Minion.\\
+
+\begin{figure}[h]
+    \begin{minipage}[c]{.46\linewidth}
+        \centering
+        \includegraphics[scale=0.5]{minion1.png}
+        \caption{\small Histogramme de la distribution des longueurs des lectures avec le Minion}
+    \end{minipage}
+    \hfill%
+    \begin{minipage}[c]{.46\linewidth}
+        \centering
+        \includegraphics[scale=0.5]{minion2.png}
+        \caption{\small Histogramme de la distribution des longueurs des lectures avec le Minion}
+    \end{minipage}
+\end{figure} 
+
+On remarque que l'allure de cette distribution décroit rapidement vers zéro.\\
+Ainsi, j'ai considéré 1000 génomes de taille g, que j'ai coupé aléatoirement en N morceaux, où N suit soit une loi de poisson, une loi uniforme ou une loi normale.\\
+Ensuite, dans le cas du Minion, j'ai considéré que le séquenceur découpe aléatoirement les fragments indépendamment de leur taille avec une probabilité très faible. On trouve alors une distribution semblable à la distribution des longueurs des fragments de l'ADN séquencé par le Minion pour les trois lois de N.\\ 
+Ci-dessous, les résultats de la simulation du séquençage de 1000 génomes de taille g = 1000000 pour N suivant : 
+\begin{itemize}
+\item une loi normale de paramètres : $\mu$ = 350 $\sigma$ = 10
+\item une loi uniforme de paramètres : a = 300, b = 350
+\item une loi de poisson de paramètres : $\lambda$ = 350 \\
+\end{itemize} 
+Les valeurs des paramètres ont été trouvés de manière empirique.\\ 
+\begin{figure}[h]
+    \begin{minipage}[c]{.46\linewidth}
+        \centering
+        \includegraphics[scale=0.5]{minion1.png}
+        \caption{Histogramme de la distribution des longueurs des lectures avec le Minion}
+    \end{minipage}
+    \hfill%
+    \begin{minipage}[c]{.46\linewidth}
+        \centering
+        \includegraphics[scale=0.5]{minormale.png}
+        \caption{Histogramme de la distribution des longueurs des lectures issu de la simulation}
+    \end{minipage}
+\end{figure} 
+\begin{figure}[h]
+    \begin{minipage}[c]{.46\linewidth}
+        \centering
+        \includegraphics[scale=0.5]{miuniforme.png}
+        \caption{Histogramme de la distribution des longueurs des lectures issu de la simulation}
+    \end{minipage}
+    \hfill%
+    \begin{minipage}[c]{.46\linewidth}
+        \centering
+        \includegraphics[scale=0.5]{mipoisson.png}
+        \caption{Histogramme de la distribution des longueurs des lectures issu de la simulation}
+    \end{minipage}
+\end{figure}   
+
+\subsubsection{Pacbio}   
+J'ai également représenté la distribution après séquençage de l'ADN avec le Pacbio.\\
+\begin{figure}[h]
+    \begin{minipage}[c]{.46\linewidth}
+        \centering
+        \includegraphics[scale=0.5]{pacbio1.png}
+        \caption{\small Histogramme de la distribution des longueurs des lectures avec le Pacbio}
+    \end{minipage}
+    \hfill%
+    \begin{minipage}[c]{.46\linewidth}
+        \centering
+        \includegraphics[scale=0.5]{pacbio2.png}
+        \caption{\small Histogramme de la distribution des longueurs des lectures avec le Pacbio}
+    \end{minipage}
+\end{figure} 
+
+
+
+On observe une distribution différente que celle du Minion, on voit que l'allure de cette distribution est croissante puis décroissante.\\
+Afin de simuler une distribution similaire, j'ai également considéré 1000 génomes de taille g, que j'ai coupé aléatoirement en N morceaux, où N suit soit une loi de poisson, une loi uniforme ou une loi normale.\\
+En revanche, dans le cas du Pacbio, j'ai considéré que le séquenceur découpe préférentiellement et aléatoirement les grands fragments. On trouve alors une distribution semblable à la distribution des longueurs des fragments de l'ADN séquencé par le Pacbio pour les trois lois de N.\\ 
+On trouve alors les résultats de la simulation du séquençage de 1000 génomes de taille g = 1000000 pour N suivant : \\
+\begin{itemize}
+\item une loi normale de paramètres : $\mu$ = 270 $\sigma$ = 10
+\item une loi uniforme de paramètres : a = 270, b = 280
+\item une loi de poisson de paramètres : $\lambda$ = 270 \\
+\end{itemize}
+
+
+\begin{figure}[h]
+    \begin{minipage}[c]{.46\linewidth}
+        \centering
+        \includegraphics[scale=0.5]{pacbio1.png}
+        \caption{\small Histogramme de la distribution des longueurs des lectures avec le Pacbio}
+    \end{minipage}
+    \hfill%
+    \begin{minipage}[c]{.46\linewidth}
+        \centering
+        \includegraphics[scale=0.5]{pacnormale.png}
+        \caption{\small Histogramme de la distribution des longueurs des lectures issu de la simulation}
+    \end{minipage}
+\end{figure} 
+\begin{figure}[h]
+    \begin{minipage}[c]{.46\linewidth}
+        \centering
+        \includegraphics[scale=0.5]{pacuniforme.png}
+        \caption{\small Histogramme de la distribution des longueurs des lectures issu de la simulation}
+    \end{minipage}
+    \hfill%
+    \begin{minipage}[c]{.46\linewidth}
+        \centering
+        \includegraphics[scale=0.5]{pacpoisson.png}
+        \caption{\small Histogramme de la distribution des longueurs des lectures issu de la simulation}
+    \end{minipage}
+\end{figure} 
+
+D'après nos observations, on peut alors se dire que le séquenceur Minion coupe effectivement les fragments indépendamment de leur taille, le séquenceur Pacbio coupe préférentiellement les grands fragments et que la loi de N peut être une des lois mentionnées.\\
+
+
+
 \subsection{Formule théorique}
-La mission suivante a été d'obtenir une formule explicite de la loi composée de la loi bêta et de la loi de N. \\
-Ainsi, la distribution des longueurs des fragments qui nous intéresse est une loi composée, dont la formule est : \\
+La mission suivante a été d'obtenir une formule explicite de la loi composée de la loi bêta et de la loi de N. Puis de trouver la formule finale décrivant la distribution des longueurs des lectures en prenant en compte l'influence du séquenceur.  \\
+\subsubsection{Loi composée bêta-loi de N}
+Tout d'abord, on sait que après fragmentation de l'ADN avant séquençage, la distribution des tailles des fragments suit une loi de bêta de paramètres $\alpha$=1 et $\beta$=N, où N correspond au nombre de fragments.\\
+Or étant donné que dans notre cas N est lui aussi une variable aléatoire, la distribution des longueurs des fragments qui nous intéresse est une loi composée de la loi bêta et de la loi de N, dont la formule est : \\
 $p_{H}(x) = \int_{}^{}p_{F}(x|n)p_{G}(n)dn$ où \\
-$p_{H}$ : densité de la loi composée, $p_{F}$ : densité de la loi de N, $p_{G}$ : densité de la loi bêta de paramètres $\alpha = 1$ et $\beta=n$. \\ 
-Avec $p_{G}(x) = \frac{\Gamma(1+n)}{\Gamma(1)\Gamma(n)}x^0(1-x)^{n-1}$ pour $x\in[0,1]$\\
-$ p_{G}(x) = \frac{n!}{(n-1)!}(1-x)^{n-1}$ \\
-$ p_{G}(x) = n(1-x)^{n-1}$ \\
+$p_{H}$ : densité de la loi composée, $p_{F}$ : densité de la loi de N, $p_{G}$ : densité de la loi bêta de paramètres $\alpha = 1$ et $\beta=N$. \\ 
+Avec $p_{G}(x) = \frac{\Gamma(1+N)}{\Gamma(1)\Gamma(N)}x^0(1-x)^{N-1}$ pour $x\in[0,1]$\\
+$ p_{G}(x) = \frac{N!}{(N-1)!}(1-x)^{N-1}$ \\
+$ p_{G}(x) = N(1-x)^{N-1}$ \\
 où $\Gamma$ est la fonction Gamma et x = $\frac{y}{g}$ avec y : la taille des fragments (en bp) et g : la taille du génome (en bp).\\
 On considère dans un premier temps le cas où N suit une loi de poisson de paramètre $\lambda$ et de densité de probabilité : $p_{F}(N=n) =\frac{\lambda^{n}e^{-\lambda}}{n!}$ \\
 avec $\lambda >0 $ et n est un entier naturel. \\
 On calcule alors la loi composée bêta-poisson $p_{H}$.\\
-$p_{H}(x) = \sum_{i=0}^{+\infty}n(1-x)^{n-1}\frac{\lambda^{n}e^{-\lambda}}{n!}$\\
-$p_{H}(x)= \lambda e^{-\lambda}\sum_{i=0}^{+\infty}\frac{(\lambda (1-x))^{n-1}}{(n-1)!}$ \\
-$p_{H}(x)= \lambda e^{-\lambda}\sum_{i=1}^{+\infty}\frac{(\lambda (1-x))^{n}}{(n)!} + \frac{\lambda^{2}e^{-\lambda}}{1-x}$ \\
-$p_{H}(x)= \lambda e^{-\lambda x} + \frac{\lambda^{2}e^{-\lambda}}{1-x}$ \\
-$p_{H}(x) = \sum_{n=0}^{+\infty}n(1-x)^{n-1}\frac{\lambda^{n}e^{-\lambda}}{n!} \\ p_{H}(x) = \sum_{n=1}^{+\infty}n(1-x)^{n-1}\frac{\lambda^{n}e^{-\lambda}}{n!} + 0 \\
-p_{H}(x) = \lambda e^{-\lambda}\sum_{k=0}^{+\infty}\frac{((1-x)\lambda)^{k}}{(k)!} \\
-p_{H}(x) = \lambda e^{-\lambda}e^{(1-x)\lambda}$ \\
+$p_{H}(x) = \sum_{i=0}^{+\infty}n(1-x)^{n-1}\frac{\lambda^{n}e^{-\lambda}}{n!} = \lambda e^{-\lambda}\sum_{i=0}^{+\infty}\frac{(\lambda (1-x))^{n-1}}{(n-1)!}$ \\
+$p_{H}(x)= \lambda e^{-\lambda}\sum_{i=1}^{+\infty}\frac{(\lambda (1-x))^{n}}{(n)!} + \frac{\lambda^{2}e^{-\lambda}}{1-x}=\lambda e^{-\lambda x} + \frac{\lambda^{2}e^{-\lambda}}{1-x}$ \\
+$p_{H}(x) = \sum_{n=0}^{+\infty}n(1-x)^{n-1}\frac{\lambda^{n}e^{-\lambda}}{n!}  = \sum_{n=1}^{+\infty}n(1-x)^{n-1}\frac{\lambda^{n}e^{-\lambda}}{n!} + 0$ \\
+$p_{H}(x) = \lambda e^{-\lambda}\sum_{k=0}^{+\infty}\frac{((1-x)\lambda)^{k}}{(k)!} =\lambda e^{-\lambda}e^{(1-x)\lambda}$ \\
 Finalement, on trouve : \\
+
 $p_{H}(x) = \lambda e^{-\lambda x}$ \\
+
 On reconnait la densité de la loi exponentielle de paramètres $\lambda > 0$. \\
 On fait de même en composant la loi bêta avec la loi uniforme de paramètres : a, b \\
 $p_{H}(x) = \int_{a}^{b}n(1-x)^{n-1}\frac{1}{b-a}dn$\\
-On trouve : $ p_{H}(x)=\frac{e^{-ln(1-x)}}{b-a}(\frac{be^{bln(1-x)}-ae^{aln(1-x)}}{ln(1-x)}+ \frac{e^{aln(1-x)}-e^{bln(1-x)}}{(ln(1-x))^2})$\\
+
+En intégrant, on trouve : $ p_{H}(x)=\frac{e^{-ln(1-x)}}{b-a}(\frac{be^{bln(1-x)}-ae^{aln(1-x)}}{ln(1-x)}+ \frac{e^{aln(1-x)}-e^{bln(1-x)}}{(ln(1-x))^2})$\\
+
 Cette densité n'est pas défini pour x = 0 ni pour x = 1, ce qui est cohérent. \\
 En effet, on peut supposer que l'ADN à séquencer (de taille g), ne peut pas être fragmenté en morceaux de taille 0 (i.e x =0), ni en morceaux de taille g (i.e x=1). \\ 
 Enfin, pour N suivant la loi normale de paramètres $\mu$ et $\sigma^2$, on a : \\
 $p_{H}(x) = \int_{0}^{+\infty}n(1-x)^{n-1}\frac{1}{\sigma\sqrt{2\pi}}e^{\frac{-(n-\mu)^2}{2\sigma^2}}dn$ \\
-$p_{H}(x)=\frac{k1k2\sigma^2}{sqrt{2\pi}}(ln(1-x)+\frac{\mu}{\sigma^2})(1-x)^{\mu^2 - 1}e^{\frac{\sigma ln(1-x)}{sqrt(2}}(1-erf(\frac{-b}{2sqrt{a}})-\frac{k1\sigma}{(1-x)sqrt{2\pi}}$ \\
+$p_{H}(x)=\frac{1}{\sigma sqrt{2\pi}} \int_{0}^{+\infty}ne^{u(n)}$\\
+avec $u(n)=\frac{-1}{2 \sigma^2}n^2+n(log(1-x)+\frac{\mu}{\sigma^2})-(log(1-x)+\frac{\mu^2}{2\sigma^2})$\\
+on pose $a=\frac{1}{2\sigma^2}$ $b(x)=log(1-x)+\frac{\mu}{\sigma^2}$ $log(1-x)+\frac{\mu^2}{2\sigma^2}$\\
+$p_{H}(x)=\frac{e^{-c(x)}}{\sigma sqrt{2\pi}} \int_{0}^{+\infty}ne^{-an^2+bn}dn$\\
+soit $J = \int_{0}^{+\infty}ne^{-an^2+bn}dn $ \\
+on peut écrire, $n=\frac{-1}{2a}(b-2an)+\frac{b}{2a}$\\
+d'où, $J = \frac{b}{2a} \int_{0}^{+\infty}e^{bn-an^2}dn+\frac{1}{2a}\int_{0}^{+\infty}(2an-b)e^{bn-an^2}dn$\\
+on pose $L = \int_{0}^{+\infty}e^{bn-an^2}dn$ et $K=\int_{0}^{+\infty}(2an-b)e^{bn-an^2}dn $\\
+on résout K et on trouve $K = -e^{bn-an^2}$\\
+pour L, on a $L=\int_{0}^{+\infty}e^{\frac{b^2}{4a}-(\sqrt{a}n-\frac{b}{2\sqrt{a}})^2}dn$\\
+on fait un changement de variable : $u=\frac{2an-b}{2\sqrt{a}}$  $du = \sqrt{a}dn$\\
+$L=\frac{\pi e^{\frac{b^2}{4a}}}{2\sqrt{a}}(\int_{\frac{-b}{2\sqrt{a}}}^{0}\frac{2e^{-u^2}}{\sqrt{\pi}}du+\int_{0}^{+\infty}\frac{2e^{-u^2}}{\sqrt{\pi}}du)$\\
+on reconnait la fonction erreur erf, on a donc :\\
+$L=\frac{\pi e^{\frac{b^2}{4a}}}{2\sqrt{a}} (erf(\frac{b}{2\sqrt{a}})+1)$\\
+Enfin, on a : \\
+
+$p_{H}(x)=\frac{e^{-c(x)}}{\sigma \sqrt{2\pi}} \frac{b}{2a} \frac{\pi e^{\frac{b^2}{4a}}}{2\sqrt{a}} (erf(\frac{b}{2\sqrt{a}})+1)+ \frac{1}{2a}-e^{bn-an^2}$ \\
+
+On trace les fonctions obtenus pour différentes valeurs de leur paramètres : \\
+
+\begin{figure}[h]
+    \begin{minipage}[c]{.46\linewidth}
+        \centering
+        \includegraphics[scale=0.5]{beta.png}
+        \caption{\small Histogramme de la distribution des longueurs des lectures avec le Minion}
+    \end{minipage}
+    \hfill%
+    \begin{minipage}[c]{.46\linewidth}
+        \centering
+        \includegraphics[scale=0.5]{betauniforme.png}
+        \caption{\small Histogramme de la distribution des longueurs des lectures issu de la simulation}
+    \end{minipage}
+\end{figure} 
+\begin{figure}[h]
+    \begin{minipage}[c]{.46\linewidth}
+        \centering
+        \includegraphics[scale=0.5]{betapoisson.png}
+        \caption{\small Histogramme de la distribution des longueurs des lectures issu de la simulation}
+    \end{minipage}
+    \hfill%
+    \begin{minipage}[c]{.46\linewidth}
+        \centering
+        \includegraphics[scale=0.5]{betanormale.png}
+        \caption{\small Histogramme de la distribution des longueurs des lectures issu de la simulation}
+    \end{minipage}
+\end{figure}
+
 On remarque que pour les trois lois composées obtenues, l'allure de cette densité est semblable à celle de la densité de la loi bêta. \\
 En outre, on observe que les espérances des lois de N se retrouvent graphiquement lorsque x tend vers 0.\\
 Par exemple, E(N)= $\lambda$, lorsque N suit une loi de poisson et lorsque x tend vers 0, $p_{H}(x)= \lambda$. \\
+\subsubsection{Loi du séquenceur et expression finale}
 Après avoir déterminé la loi composée de bêta avec la loi de N, la mission suivante a été de trouver une loi $f$ permettant de modéliser la distribution des longueurs des lectures, lorsque celles-ci passent dans le séquenceur. \\
 En effet, comme mentionner précédemment, les séquenceurs Minion et Pacbio semblent couper certains fragments d'ADN pendant le séquençage, d'après les biologistes que nous avons rencontrés.\\
-Ainsi, la loi géométrique nous a semblé approprié pour décrire la distribution des longueurs des fragments fourni par le séquenceur. 
-En effet, le séquenceur a une probabilité p (ici très faible) de couper un fragment.
-Cette probabilité est indépendante de la longueur du fragment introduit dans le séquenceur. \\
+Ainsi, pour le Minion, la loi géométrique nous a semblé approprié pour décrire la distribution des longueurs des fragments fourni par ce séquenceur. \\
 $f(x) = p(1-p)^{x-1}$ où x représente la longueur d'un fragment (en bp) \\
-Ainsi, on calcule la fonction G décrivant la distribution des longueurs des fragments en prenant en considération la particularité du séquenceur. \\
-On intègre la fonction $p_H(l)$ entre x et G car \\
-$G(x)=f(x)*\int_{x}^{g}p_H(l)dl$ \\
-$G(x)=p(1-p)^{x-1}( e^{-\lambda x}- e^{-\lambda g})$ avec g : taille du génome.\\
+En effet, cette loi nous donne la probabilité $f(x)$ d'obtenir dans une succession de x épreuves de Bernoulli, x-1 échecs suivis d'un succès.\\
+Ici, le succès correspond au fait de couper le fragment avec une probabilité p qui est faible car le séquenceur n'est pas sensé couper de fragments, il s'agit d'un évènement rare.
+Cette probabilité est indépendante de la longueur du fragment introduit dans le séquenceur. Ainsi, à chaque nucléotide, la probabilité de coupe p est constante.  \\
+Ainsi, on calcule la fonction G décrivant la loi de la distribution des longueurs des fragments en prenant en considération la particularité du séquenceur. G(x) donne la probabilité d'avoir un fragment de taille x.\\
+
+On a : $G(x)=f(x)*\int_{x}^{g}p_H(l)dl$ \\
+
+En effet, un fragment de taille l ne peut avoir une taille x après séquençage, seulement si x<l<g. Sinon la probabilité d'obtenir un fragment de taille x vaut 0. \\
 Étant donné que la fonction composée bêta-poisson a une expression plus simple que les autres fonctions composées calculées précédemment, et que leurs représentations sont similaires, pour simplifier les calculs, nous avons décidé de considérer $p_H(x) = \lambda*e^{-\lambda x}$ \\
-En représentant graphiquement cette fonction G, on a remarqué que l'on obtient une courbe de même allure que la distribution des longueurs des fragments pour l'ADN séquencé avec le Minion.\\
-Dans le cas du séquençage effectué à l'aide du Pacbio, en revanche, ce n'est pas le cas. Il nous a semblé alors, que la probabilité de couper le fragment introduit dépend de la longueur de celui-ci : plus le fragment est long et plus le séquenceur à de chances de le couper. On a alors modélisé ce cas en utilisant la loi de Weibull.\\
+
+$G(x)=p(1-p)^{x-1}( e^{-\lambda x}- e^{-\lambda g})$ avec g : taille du génome.\\
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.65]{loigminion.png}
+  \caption{\small Représentation de la loi G}
+\end{figure}
+
+En représentant graphiquement cette fonction G, on a remarqué que l'on obtient une courbe de même allure que la distribution des longueurs des fragments pour l'ADN séquencé avec le Minion. Il s'agit d'une courbe qui décroit vers 0.\\
+
+On estime les paramètres p et $\lambda$ à l'aide de la log-vraisemblance : \\
+$L(x) =  \sum_{i=1}^{n} log(p(1-p)^{x_{i}-1}(e^{-\lambda x_{i}})-e^{-\lambda g})$\\
+On trouve alors les expressions : \\
+
+$p = \frac{n}{\sum_{i=1}^{n} x_{i}}$
+$\sum_{i=1}^{n}\frac{-x_{i}e^{-\lambda x_{i}}+ge^{-\lambda g }}{e^{-\lambda  x_{i}}-e^{-\lambda g }}=0 $ 
+on peut réécrire : $\sum_{i=1}^{n}(g-x_{i})\frac{e^{\lambda(g-x_{i})}}{e^{\lambda(g-x_{i})}-1}=ng$
+
+Ce dernier paramètre étant difficile à isoler, j'ai alors trouver une valeur de $\lambda$ pour laquelle la courbe de la fonction G a la même allure que des données théoriques.\\
+Ensuite à l'aide des paramètres initiaux trouvés, je les ai optimisé en minimisant la log-vraisemblance négative à l'aide du package scipy.optimize sur python. J'ai utilisé la fonction fmin qui minimise une fonction en utilisant l'algorithme du simplexe.\\
+J'ai trouvé comme paramètres pour un jeu de données issues du séquençage Minion :\\ 
+$p = 9.37*10^{-5}$ et $\lambda = 2*10^{-5}$ \\
+Ainsi, en représentant la fonction G et les données expérimentales, on trouve : \\
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.65]{gminion.png}
+  \caption{\small Représentation de la loi G}
+\end{figure}\\
+
+Dans le cas du séquençage effectué à l'aide du Pacbio, en revanche, la fonction G décrite ci-dessous n'est pas appropriée. On a supposé, que la probabilité de couper le fragment introduit dépend de la longueur de celui-ci : plus le fragment est long et plus le séquenceur à de chances de le couper. On a alors modélisé ce cas en utilisant la loi de Weibull.\\
+
 $f(x) = \frac{k}{\alpha} (\frac{x}{\alpha})^{k-1}e^{-(\frac{x}{\alpha})^k}$ \\
+
 où k>0 et $\alpha>0$\\
 On posera $\mu = \frac{1}{\alpha}$\\
 Cette loi est utilisée généralement lorsque le taux de défaillance évolue comme une puissance du temps.\\ Dans notre cas : le taux de défaillance correspond au taux de coupe par le séquenceur, et cette loi est en fonction de la taille en bp et non du temps. De plus, le paramètre k est supérieur à 1, c'est-à-dire que le taux de coupe croît avec la taille. \\
 La fonction G vaut alors :  \\
 $G(x)=f(x)*\int_{x}^{G}p_H(l)dl$ \\
+
 $G(x)= k \mu (x \mu)^{k-1}e^{-(x \mu)^k}( e^{-\lambda x}- e^{-\lambda g})$ \\
 
-
-Pour Minion, nous avons $G(x)= p(1-p)^{x-1} (e^{-\lambda G}-e^{-\lambda x}) $ \\
-On optimise les paramètres en utilisant le maximum de vraisemblance.
-Pour pacbio, $G(x)=\frac{k}{\alpha} (\frac{x}{\alpha})^{k-1}e^{-(\frac{x}{\alpha})^k} (e^{-\lambda G}-e^{-\lambda x})$
-
-\section{Apport et bilan du stage} 
-
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.65]{gpacbio.png}
+  \caption{\small Représentation de la loi G}
+\end{figure}
 
 
-On sait que cette distribution de tailles suit une loi de bêta de paramètres 1 et n.
-On peut le montrer théoriquement. \\
+On estime les paramètres à l'aide de la log-vraisemblance : \\
+$L(x) = \sum_{i=0}^{n} log(k \mu (x_{i} \mu)^{k-1}e^{-(x_{i} \mu)^k}( e^{-\lambda x_{i}}- e^{-\lambda g}))$ \\
+$\frac{\partial L(x)}{\partial \mu} = \frac{nk-k \mu^k \sum_{i=0}^{n}x_{i}^k  }{\mu}$\\
+$\frac{\partial L(x)}{\partial k} = \frac{n}{\mu} nlog(\mu)+\sum_{i=0}^{n}log(x_{i})-\sum_{i=0}^{n}
+log(\mu x_{i})e^{klog(\mu x_{i})}$\\
+
+$\frac{\partial L(x)}{\partial \lambda} = \frac{\sum_{i=0}^{n}-x_{i}e^{-\lambda x_{i}}+ge^{-\lambda g}}e^{-\lambda x_{i}-e^{-\lambda g}}$\\
+On trouve alors les expressions suivantes:\\
+
+$\mu = \sqrt[k]{\frac{n}{\sum_{i=0}^{n}x_{i}^k }}$
+$- \frac{n}{k}+ \sum_{i=0}^{n}log(\mu x_{i})e^{klog(\mu x_{i}} = nlog(\mu) + \sum_{i=0}^{n}log(x_i)$
+$\sum_{i=0}^{n}\frac{-x_{i}e^{-\lambda x_{i}}+ge^{-\lambda g }}{e^{-\lambda  x_{i}}-e^{-\lambda g }}$
+on peut réécrire : $\sum_{i=1}^{n}(g-x_{i})\frac{e^{\lambda(g-x_{i})}}{e^{\lambda(g-x_{i})}-1}=ng$\\
+
+
+Comme précédemment, j'ai estimé des paramètres initiaux à l'aide des expressions ci-dessus. 
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.65]{gminion.png}
+  \caption{\small Représentation de la loi G}
+\end{figure}
+
+
+\section{Conclusion - Perspectives} 
+
+En conclusion, ce stage a été très enrichissant pour moi car il m’a permis de découvrir le secteur de la recherche scientifique, et il m’a permis de participer concrètement à ses enjeux au travers de mes missions variées. Ce stage m’a aussi permis de comprendre que les missions créatives n’étaient pas les plus adaptées pour moi…et je préfère m’orienter vers les métiers de …. qui me conviennent mieux.(Cette partie doit faire le bilan des plus et moins du stage / votre enrichissement pour votre future carrière)
+L’entreprise … qui m’a accueilli pendant ce stage fait face à une période charnière…, et je suis très fier d’avoir pu contribuer, participer à cette révolution. L’évolution des usages et l’adaptation de l’entreprise au changement de son environnement…. 
+(Cette partie doit montrer que vous avez su comprendre les enjeux économiques des secteurs de l’entreprise et/ou réponse à la problématique du rapport)
+Fort de cette expérience et en réponse à ses enjeux, j’aimerai beaucoup par la suite essayer de m’orienter via un prochain stage, vers le secteur … avec des acteurs de petites tailles, et un important développement d’avenir. 
+(ouverture …prochaine étape)
+\newpage     
+\listoffigures
+\newpage
+\begin{appendix}    
+    \label{a_micro}
+    \begin{center}
+        \includegraphics[scale=0.4, angle=90]{minion.jpg}
+    \end{center} 
+    \label{a_encartage}
+    \begin{center}
+        \includegraphics[scale=0.28, angle=90]{pacbio.jpg}
+    \end{center}  
+\end{appendix}
+\newpage
+\bibliographystyle{plain-fr}
+\nocite{*}
+\bibliography{rapport}
+%On peut le montrer théoriquement. 
 On s'intéresse au positionnement de lecture $S_{i}$ sur un génome de taille G. $S_{i}$ : position de départ de la $i_{ème}$ lecture sur le génome.\\
 Les lectures sont générées aléatoirement et uniformément le long du génome.
 Soit $D_{i}$= $S_{i+1}$-$S_{i}$ la distance entre 2 positions de départ consécutives.
@@ -225,24 +487,5 @@ On considère la densité de probabilité jointe pour $S_(i)$ et $S_{(i+1)}$\\
 $f_{X(i)X(i+1)}(x,y) = \frac{n!}{(i-1)!(n-i-1)!} (\frac{x}{G})^{i-1} \frac{1}{G} \frac{1}{G}[1-\frac{y}{G}]^{n-i-1}$ y>x\\
 L'évènement $D_i$=d est le même que $S_{(i+1)}=x+d sachant que S(i)=x$
 P($D_i$=d)=P($S_{(i+1)}=x+d|S_i=x $)=$\frac{P(S_{(i+1)}=x+d,S_i=x}{P(S_i=x)} $\\
-Donc $\frac{(n-i)(1-x-d)^{n-i-1}}{G(1-x)^{n-i}}=\frac{n-i}{G(1-x)}[\frac{1-x-d}{1-x}]^{n-i-1}$ x$\in$[0,1]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
-On sait que l'ADN est découpé aléatoirement (shot gun) ce qui est comparable à découper un bâton aléatoirement en N morceaux.  \\
-
-
-
-
-
-
-
-
-
-\section{Conclusion - Perspectives} 
-lander-watermann
-\newpage     
-\listoffigures
-\newpage
-\newpage
-\bibliographystyle{plain-fr}
-\nocite{*}
-\bibliography{rapport}
+Donc $\frac{(n-i)(1-x-d)^{n-i-1}}{G(1-x)^{n-i}}=\frac{n-i}{G(1-x)}[\frac{1-x-d}{1-x}]^{n-i-1}$ x$\in$[0,1]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
 \end{document} 
